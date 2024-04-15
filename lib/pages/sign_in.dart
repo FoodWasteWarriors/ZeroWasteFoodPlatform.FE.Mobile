@@ -126,7 +126,7 @@ class _SignInState extends State<SignIn> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                'Create an account',
+                                'Sign In',
                                 style: GoogleFonts.getFont(
                                   'Overpass',
                                   color: const Color(0xFF57636C),
@@ -149,13 +149,13 @@ class _SignInState extends State<SignIn> {
                               Padding(
                                 padding: const EdgeInsetsDirectional.fromSTEB(
                                     0, 0, 0, 16),
-                                child: Container(
+                                child: SizedBox(
                                   width: 370,
                                   child: TextFormField(
                                     controller: emailAddressController,
                                     focusNode: emailAddressFocusNode,
                                     autofocus: true,
-                                    autofillHints: [AutofillHints.email],
+                                    autofillHints: const [AutofillHints.email],
                                     obscureText: false,
                                     decoration: InputDecoration(
                                       labelText: 'Email',
@@ -209,13 +209,13 @@ class _SignInState extends State<SignIn> {
                               Padding(
                                 padding: const EdgeInsetsDirectional.fromSTEB(
                                     0, 0, 0, 16),
-                                child: Container(
+                                child: SizedBox(
                                   width: 370,
                                   child: TextFormField(
                                     controller: passwordController,
                                     focusNode: passwordFocusNode,
                                     autofocus: true,
-                                    autofillHints: [AutofillHints.password],
+                                    autofillHints: const [AutofillHints.password],
                                     obscureText: !passwordVisibility,
                                     decoration: InputDecoration(
                                       labelText: 'Password',
@@ -320,23 +320,29 @@ class _SignInState extends State<SignIn> {
                                     children: [
                                       const TextSpan(
                                         text: 'Don\'t have an account? ',
-                                        style: TextStyle(),
+                                        style: TextStyle(
+                                          color: Color(0xFF57636C),
+                                          fontSize: 16,
+                                        ),
                                       ),
+                                      // Wrap only the "Create one" text with GestureDetector
                                       TextSpan(
                                         text: 'Create one',
-                                        style: GoogleFonts.getFont(
-                                          'Overpass',
-                                          color: const Color(0xFF4B39EF),
+                                        style: const TextStyle(
+                                          color: Color(0xFF4B39EF),
                                           fontSize: 16,
                                           fontWeight: FontWeight.w500,
                                         ),
-                                      )
+                                        recognizer: TapGestureRecognizer()
+                                          ..onTap = () {
+                                            // Navigate to another screen when "Create one" is tapped
+                                            Navigator.pushNamed(
+                                              context,
+                                              "/create_account",
+                                            );
+                                          },
+                                      ),
                                     ],
-                                    style: GoogleFonts.getFont(
-                                      'Overpass',
-                                      color: const Color(0xFF57636C),
-                                      fontSize: 16,
-                                    ),
                                   ),
                                 ),
                               ),

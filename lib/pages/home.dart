@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:animations/animations.dart';
+import 'package:food_waste_2/pages/add_product.dart';
 import 'package:food_waste_2/pages/create_account.dart';
+import 'package:food_waste_2/pages/profile.dart';
 import 'package:food_waste_2/pages/shop.dart';
 import 'package:food_waste_2/pages/sign_in.dart';
 
@@ -38,7 +40,7 @@ class _HomeState extends State<Home> {
               color: Colors.white,
               child: const Shop(),
             ),
-            Container(
+            /* Container(
               key: const ValueKey<String>('Create Account'),
               color: Colors.white,
               child: const Center(
@@ -51,7 +53,19 @@ class _HomeState extends State<Home> {
               child: const Center(
                 child: SignIn(),
               ),
-            ),
+            ), */
+            Container(
+                key: const ValueKey<String>('Shop'),
+                color: Colors.white,
+                child: const Center(
+                  child: Profile(),
+                )),
+            Container(
+                key: const ValueKey<String>('Add'),
+                color: Colors.white,
+                child: const Center(
+                  child: AddProduct()
+                )),
           ][selectedIndex],
         ),
         bottomNavigationBar: BottomNavigationBar(
@@ -61,13 +75,21 @@ class _HomeState extends State<Home> {
               icon: Icon(Icons.request_page),
               label: 'Shop',
             ),
-            BottomNavigationBarItem(
+/*             BottomNavigationBarItem(
               icon: Icon(Icons.home),
               label: 'Create Account',
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.add_box_outlined),
               label: 'Sign In',
+            ), */
+            BottomNavigationBarItem(
+              icon: Icon(Icons.person),
+              label: 'Profile',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.add),
+              label: 'Add',
             ),
           ],
           currentIndex: selectedIndex,
