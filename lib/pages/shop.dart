@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
+import 'package:food_waste_2/pages/add_product.dart';
 import 'package:food_waste_2/widgets/recent_product_card.dart';
 import 'dart:ui';
 import '../services/user_service.dart';
@@ -59,8 +60,15 @@ class _ShopState extends State<Shop> {
                 await FlutterBarcodeScanner.scanBarcode(
                         '#FF0000', 'Cancel', true, ScanMode.BARCODE)
                     .then((value) => {
-                          setState(() => barcodeValue = value),
-                          print("Barcode was scanned: $barcodeValue")
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => AddProduct(
+                                key: const ValueKey<String>('AddProduct'),
+                                id: value,
+                              ),
+                            ),
+                          )
                         });
               },
               backgroundColor: FlutterFlowTheme.of(context).primary,
@@ -228,19 +236,22 @@ class _ShopState extends State<Shop> {
                                     scrollDirection: Axis.vertical,
                                     children: [
                                       const ProductCard(
+                                        id: '1',
                                         imageUrl:
                                             'https://images.unsplash.com/photo-1597475681177-809cfdc76cd2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8YmVhY2hob3VzZXxlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&w=900&q=60',
-                                        propertyName: 'propertyName',
+                                        propertyName: 'propertyName1',
                                         pricePerNight: 'pricePerNight',
                                         location: 'location',
                                       ),
                                       const ProductCard(
+                                          id: '2',
                                           imageUrl:
                                               "https://images.unsplash.com/photo-1597475681177-809cfdc76cd2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8YmVhY2hob3VzZXxlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&w=900&q=60",
                                           propertyName: "propertyName",
                                           pricePerNight: "pricePerNight",
                                           location: "location"),
                                       const ProductCard(
+                                          id: '3',
                                           imageUrl:
                                               "https://images.unsplash.com/photo-1597475681177-809cfdc76cd2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8YmVhY2hob3VzZXxlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&w=900&q=60",
                                           propertyName: "propertyName",

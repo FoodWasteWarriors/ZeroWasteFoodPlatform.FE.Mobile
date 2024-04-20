@@ -60,12 +60,12 @@ class _HomeState extends State<Home> {
                 child: const Center(
                   child: Profile(),
                 )),
-            Container(
+            /* Container(
                 key: const ValueKey<String>('Add'),
                 color: Colors.white,
                 child: const Center(
                   child: AddProduct()
-                )),
+                )), */
           ][selectedIndex],
         ),
         bottomNavigationBar: BottomNavigationBar(

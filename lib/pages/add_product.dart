@@ -4,7 +4,12 @@ import 'package:flutterflow_ui/flutterflow_ui.dart';
 const List<String> list = <String>['One', 'Two', 'Three', 'Four'];
 
 class AddProduct extends StatefulWidget {
-  const AddProduct({super.key});
+  final String id;
+
+  const AddProduct({
+    super.key,
+    required this.id,
+  });
 
   @override
   State<AddProduct> createState() => _AddProductWidgetState();
@@ -83,7 +88,9 @@ class _AddProductWidgetState extends State<AddProduct> {
                 color: Color(0xFF15161E),
                 size: 24,
               ),
-              onPressed: () async {},
+              onPressed: () {
+                Navigator.pop(context);
+              },
             ),
           ),
         ],
@@ -636,6 +643,7 @@ class _AddProductWidgetState extends State<AddProduct> {
                   child: FFButtonWidget(
                     onPressed: () async {
                       // Add your onPressed code here!
+                      print(widget.id);
                       print(dropdownValue);
                       print(choiceChipsValue);
                       print(fullNameController.text);
