@@ -6,7 +6,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
 class SignIn extends StatefulWidget {
-  const SignIn({super.key});
+  final Function toggleView;
+  const SignIn({super.key, required this.toggleView});
 
   @override
   State<SignIn> createState() => _SignInState();
@@ -336,10 +337,7 @@ class _SignInState extends State<SignIn> {
                                         recognizer: TapGestureRecognizer()
                                           ..onTap = () {
                                             // Navigate to another screen when "Create one" is tapped
-                                            Navigator.pushNamed(
-                                              context,
-                                              "/create_account",
-                                            );
+                                            widget.toggleView();
                                           },
                                       ),
                                     ],

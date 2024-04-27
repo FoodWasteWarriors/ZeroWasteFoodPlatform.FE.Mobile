@@ -5,13 +5,9 @@ class UserService {
     await Future.delayed(const Duration(seconds: 1));
 
     UserModel user = UserModel(
-      uid: '123',
-      name: 'John',
-      surname: 'Doe',
-      username: 'johndoe',
-      dateOfBirth: DateTime(1990, 1, 1),
-      email: '',
-    );
+        username: 'John Doe',
+        email: 'john@gmail.com',
+        phoneNumber: '1234567890');
 
     return user;
   }

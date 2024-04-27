@@ -1,12 +1,15 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
+import 'package:food_waste_2/models/customer.dart';
+import 'package:food_waste_2/models/user.dart';
 import 'package:food_waste_2/services/auth.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
 class CreateAccount extends StatefulWidget {
-  const CreateAccount({super.key});
+  final Function toggleView;
+  const CreateAccount({super.key, required this.toggleView});
 
   @override
   State<CreateAccount> createState() => _CreateAccountState();
@@ -86,11 +89,23 @@ class _CreateAccountState extends State<CreateAccount> {
       );
       return;
     }
-
-    final user = await authManager.createAccountWithEmail(
-      emailAddressController.text,
-      passwordController.text,
+    final customer = CustomerModel(
+      username: 'sprinkai',
+      email: emailAddressController.text,
+      phoneNumber: '',
+      firstName: '',
+      lastName: '',
+      avatar: '',
+      password: passwordController.text,
     );
+
+    try {
+      UserModel? user = await authManager.createCustomer(customer);
+
+      print(user);
+    } catch (e) {
+      print(e);
+    }
   }
 
   @override
@@ -441,10 +456,7 @@ class _CreateAccountState extends State<CreateAccount> {
                                         recognizer: TapGestureRecognizer()
                                           ..onTap = () {
                                             // Navigate to another screen when "Create one" is tapped
-                                            Navigator.pushNamed(
-                                              context,
-                                              "/sign_in",
-                                            );
+                                            widget.toggleView();
                                           },
                                       ),
                                     ],

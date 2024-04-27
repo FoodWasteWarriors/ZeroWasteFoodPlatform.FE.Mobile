@@ -122,7 +122,7 @@ class _ShopState extends State<Shop> {
                           ),
                           Expanded(
                             child: Text(
-                              'Welcome, ${snapshot.data!.name}!',
+                              'Welcome, ${snapshot.data!.username}!',
                               style:
                                   FlutterFlowTheme.of(context).headlineMedium,
                             ),
