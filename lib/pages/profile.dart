@@ -1,8 +1,14 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:food_waste_2/models/user.dart';
+import 'package:food_waste_2/providers/user_provider.dart';
+import 'package:food_waste_2/services/auth.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
+import 'package:http/http.dart' as http;
 
 class Profile extends StatefulWidget {
   const Profile({super.key});
@@ -24,8 +30,14 @@ class _ProfileState extends State<Profile> {
     super.dispose();
   }
 
+  void logout() async {}
+
   @override
   Widget build(BuildContext context) {
+    final user = Provider.of<UserProvider>(context);
+    print(user.user.id);
+    print(user.user.token);
+
     return Scaffold(
       key: scaffoldKey,
       backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
@@ -195,52 +207,141 @@ class _ProfileState extends State<Profile> {
                 ),
               ),
             ),
-            Padding(
-              padding: const EdgeInsetsDirectional.fromSTEB(16, 12, 16, 0),
-              child: Container(
-                width: double.infinity,
-                height: 60,
-                decoration: BoxDecoration(
-                  color: FlutterFlowTheme.of(context).secondaryBackground,
-                  boxShadow: const [
-                    BoxShadow(
-                      blurRadius: 5,
-                      color: Color(0x3416202A),
-                      offset: Offset(0, 2),
-                    )
-                  ],
-                  borderRadius: BorderRadius.circular(12),
-                  shape: BoxShape.rectangle,
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.all(8),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.max,
-                    children: [
-                      Icon(
-                        Icons.account_circle_outlined,
-                        color: FlutterFlowTheme.of(context).secondaryText,
-                        size: 24,
-                      ),
-                      Expanded(
-                        child: Padding(
-                          padding:
-                              const EdgeInsetsDirectional.fromSTEB(12, 0, 0, 0),
-                          child: Text(
-                            'Edit Profile',
-                            style: FlutterFlowTheme.of(context).bodyLarge,
+            GestureDetector(
+              onTap: () async {
+                // ignore: avoid_print
+                print('GestureDetector pressed ...');
+              },
+              child: Padding(
+                padding: const EdgeInsetsDirectional.fromSTEB(16, 12, 16, 0),
+                child: Container(
+                  width: double.infinity,
+                  height: 60,
+                  decoration: BoxDecoration(
+                    color: FlutterFlowTheme.of(context).secondaryBackground,
+                    boxShadow: const [
+                      BoxShadow(
+                        blurRadius: 5,
+                        color: Color(0x3416202A),
+                        offset: Offset(0, 2),
+                      )
+                    ],
+                    borderRadius: BorderRadius.circular(12),
+                    shape: BoxShape.rectangle,
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(8),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.max,
+                      children: [
+                        Icon(
+                          Icons.account_circle_outlined,
+                          color: FlutterFlowTheme.of(context).secondaryText,
+                          size: 24,
+                        ),
+                        Expanded(
+                          child: Padding(
+                            padding: const EdgeInsetsDirectional.fromSTEB(
+                                12, 0, 0, 0),
+                            child: Text(
+                              'Edit Profile',
+                              style: FlutterFlowTheme.of(context).bodyLarge,
+                            ),
                           ),
                         ),
-                      ),
-                      Align(
-                        alignment: const AlignmentDirectional(0.9, 0),
-                        child: Icon(
-                          Icons.arrow_forward_ios,
-                          color: FlutterFlowTheme.of(context).secondaryText,
-                          size: 18,
+                        Align(
+                          alignment: const AlignmentDirectional(0.9, 0),
+                          child: Icon(
+                            Icons.arrow_forward_ios,
+                            color: FlutterFlowTheme.of(context).secondaryText,
+                            size: 18,
+                          ),
                         ),
-                      ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            GestureDetector(
+              onTap: () async {
+                // ignore: avoid_print
+                print('GestureDetector pressed ...');
+
+                try {
+                  final response = await http.post(
+                      Uri.parse(
+                          'http://10.0.2.2:5157/api/v1/Auth/logout-user/${user.user.id}'),
+                      headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': '*/*',
+                        'Authorization': 'Bearer ${user.user.token}',
+                      });
+
+                  if (response.statusCode == 200) {
+                    print('Logged out');
+                    Provider.of<UserProvider>(context, listen: false)
+                        .changeUserData(UserModel(
+                      id: '',
+                      username: '',
+                      email: '',
+                      phoneNumber: '',
+                      token: '',
+                    ));
+                  } else {
+                    print('Failed to logout');
+                  }
+                } catch (e) {
+                  print(e);
+                }
+              },
+              child: Padding(
+                padding: const EdgeInsetsDirectional.fromSTEB(16, 12, 16, 0),
+                child: Container(
+                  width: double.infinity,
+                  height: 60,
+                  decoration: BoxDecoration(
+                    color: FlutterFlowTheme.of(context).secondaryBackground,
+                    boxShadow: const [
+                      BoxShadow(
+                        blurRadius: 5,
+                        color: Color(0x3416202A),
+                        offset: Offset(0, 2),
+                      )
                     ],
+                    borderRadius: BorderRadius.circular(12),
+                    shape: BoxShape.rectangle,
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(8),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.max,
+                      children: [
+                        Icon(
+                          Icons.account_circle_outlined,
+                          color: FlutterFlowTheme.of(context).secondaryText,
+                          size: 24,
+                        ),
+                        Expanded(
+                          child: Padding(
+                            padding: const EdgeInsetsDirectional.fromSTEB(
+                                12, 0, 0, 0),
+                            child: Text(
+                              'Edit Profile',
+                              style: FlutterFlowTheme.of(context).bodyLarge,
+                            ),
+                          ),
+                        ),
+                        Align(
+                          alignment: const AlignmentDirectional(0.9, 0),
+                          child: Icon(
+                            Icons.arrow_forward_ios,
+                            color: FlutterFlowTheme.of(context).secondaryText,
+                            size: 18,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),

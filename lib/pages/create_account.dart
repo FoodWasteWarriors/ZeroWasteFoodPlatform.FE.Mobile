@@ -92,16 +92,22 @@ class _CreateAccountState extends State<CreateAccount> {
     final customer = CustomerModel(
       username: 'sprinkai',
       email: emailAddressController.text,
-      phoneNumber: '',
-      firstName: '',
-      lastName: '',
-      avatar: '',
+      phoneNumber: 'sdfaf',
+      firstName: 'fads',
+      lastName: 'fasd',
+      avatar: 'safd',
       password: passwordController.text,
     );
 
     try {
       UserModel? user = await authManager.createCustomer(customer);
 
+      widget.toggleView();
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('User created successfully'),
+        ),
+      );
       print(user);
     } catch (e) {
       print(e);

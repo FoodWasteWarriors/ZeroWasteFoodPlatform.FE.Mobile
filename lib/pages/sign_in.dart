@@ -1,6 +1,7 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
+import 'package:food_waste_2/providers/user_provider.dart';
 import 'package:food_waste_2/services/auth.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
@@ -66,6 +67,18 @@ class _SignInState extends State<SignIn> {
       emailAddressController.text,
       passwordController.text,
     );
+
+    if (user != null) {
+      Provider.of<UserProvider>(context, listen: false).changeUserData(user);
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text(
+            'Failed to sign in!',
+          ),
+        ),
+      );
+    }
   }
 
   @override

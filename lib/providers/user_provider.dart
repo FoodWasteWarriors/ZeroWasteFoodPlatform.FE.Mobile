@@ -4,7 +4,9 @@ import 'package:flutter/material.dart';
 class UserProvider extends ChangeNotifier {
   UserModel user;
 
-  UserProvider() : user = UserModel(username: '', email: '', phoneNumber: '');
+  UserProvider()
+      : user = UserModel(
+            id: "", username: '', email: '', phoneNumber: '', token: '');
 
   void changeUserData(UserModel user) async {
     this.user = user;
