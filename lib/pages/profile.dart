@@ -283,6 +283,7 @@ class _ProfileState extends State<Profile> {
                     Provider.of<UserProvider>(context, listen: false)
                         .changeUserData(UserModel(
                       id: '',
+                      role: '',
                       username: '',
                       email: '',
                       phoneNumber: '',
@@ -327,7 +328,7 @@ class _ProfileState extends State<Profile> {
                             padding: const EdgeInsetsDirectional.fromSTEB(
                                 12, 0, 0, 0),
                             child: Text(
-                              'Edit Profile',
+                              'Logout',
                               style: FlutterFlowTheme.of(context).bodyLarge,
                             ),
                           ),

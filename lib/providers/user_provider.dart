@@ -6,7 +6,12 @@ class UserProvider extends ChangeNotifier {
 
   UserProvider()
       : user = UserModel(
-            id: "", username: '', email: '', phoneNumber: '', token: '');
+            id: "",
+            role: "",
+            username: '',
+            email: '',
+            phoneNumber: '',
+            token: '');
 
   void changeUserData(UserModel user) async {
     this.user = user;

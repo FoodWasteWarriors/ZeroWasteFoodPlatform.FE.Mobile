@@ -6,6 +6,7 @@ class UserService {
 
     UserModel user = UserModel(
         id: '1',
+        role: 'user',
         username: 'John Doe',
         email: 'john@gmail.com',
         phoneNumber: '1234567890',

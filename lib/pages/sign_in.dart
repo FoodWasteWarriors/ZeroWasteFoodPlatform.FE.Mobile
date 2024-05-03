@@ -122,7 +122,7 @@ class _SignInState extends State<SignIn> {
                           padding:
                               const EdgeInsetsDirectional.fromSTEB(32, 0, 0, 0),
                           child: Text(
-                            'brand.ai',
+                            'sprink.ai',
                             style: GoogleFonts.getFont(
                               'Overpass',
                               color: Colors.black,

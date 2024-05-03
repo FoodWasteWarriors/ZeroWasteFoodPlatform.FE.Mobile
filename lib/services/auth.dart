@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:food_waste_2/models/customer.dart';
+import 'package:food_waste_2/models/store.dart';
 import 'package:food_waste_2/models/user.dart';
 import 'package:food_waste_2/providers/user_provider.dart';
 import 'package:http/http.dart' as http;
@@ -9,9 +10,52 @@ import 'dart:io';
 import 'package:provider/provider.dart';
 
 class Auth {
-  Future<UserModel?> createCustomer(CustomerModel customer) async {
+  Future<bool?> createStore(StoreModel store) async {
+    print(
+        'Create account with email: ${store.email} and password: ${store.password}');
+
+    print(Platform.isAndroid);
+
+    try {
+      final response = await http.post(
+        Uri.parse('http://10.0.2.2:5157/api/v1/Auth/register-business'),
+        headers: <String, String>{
+          'Content-Type': 'application/json',
+          'Connection': 'keep-alive',
+          'Accept': '*/*',
+        },
+        body: jsonEncode(<String, String>{
+          'username': store.username,
+          'email': store.email,
+          'phoneNumber': store.phoneNumber,
+          'password': store.password,
+          'address': store.address,
+          'name': store.name,
+          'website': store.website,
+          'description': store.description,
+          'logo': store.logo,
+          'coverPhoto': store.coverPhoto,
+        }),
+      );
+
+      print(response.body);
+
+      if (response.statusCode == 200) {
+        return true;
+      } else {
+        print('Failed to create user');
+        return false;
+      }
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  Future<bool?> createCustomer(CustomerModel customer) async {
     print(
         'Create account with email: $customer and password: ${customer.password}');
+    print(customer.phoneNumber);
+    print(customer.username);
 
     print(Platform.isAndroid);
     try {
@@ -23,7 +67,7 @@ class Auth {
           'Accept': '*/*',
         },
         body: jsonEncode(<String, String>{
-          'username': customer.email,
+          'username': customer.username,
           'email': customer.email,
           'phoneNumber': customer.phoneNumber,
           'firstName': customer.firstName,
@@ -35,17 +79,10 @@ class Auth {
 
       print(response.body);
       if (response.statusCode == 200) {
-        final user = new UserModel(
-          id: jsonDecode(response.body)['id'],
-          username: customer.username,
-          email: customer.email,
-          phoneNumber: customer.phoneNumber,
-          token: jsonDecode(response.body)['token'],
-        );
-
-        return Future.value(UserModel.fromJson(jsonDecode(response.body)));
+        return true;
       } else {
         print('Failed to create user');
+        return false;
       }
     } catch (e) {
       print(e);
@@ -79,12 +116,13 @@ class Auth {
         final token = data['token'] as Map<String, dynamic>;
         final newUser = new UserModel(
           id: user['id'],
+          role: user['role'],
           username: user['username'],
           email: user['email'],
           phoneNumber: user['phoneNumber'],
           token: token['accessToken'],
         );
-        print(token);
+        print(user);
         return Future.value(newUser);
       } else {
         print('Failed to create user');
@@ -106,6 +144,7 @@ class Auth {
         Provider.of<UserProvider>(context, listen: false)
             .changeUserData(UserModel(
           id: '',
+          role: '',
           username: '',
           email: '',
           phoneNumber: '',
