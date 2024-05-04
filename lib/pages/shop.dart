@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
 import 'package:food_waste_2/models/product_info.dart';
+import 'package:food_waste_2/models/store_product.dart';
 import 'package:food_waste_2/pages/add_product.dart';
 import 'package:food_waste_2/providers/user_provider.dart';
 import 'package:food_waste_2/services/product.dart';
@@ -56,6 +57,7 @@ class _ShopState extends State<Shop> {
           );
         }
         final shopGetUserResponse = snapshot.data!;
+        final user = Provider.of<UserProvider>(context);
         return GestureDetector(
           child: Scaffold(
             key: const Key('shopScaffold'),
@@ -71,6 +73,7 @@ class _ShopState extends State<Shop> {
                               builder: (context) => AddProduct(
                                 key: const ValueKey<String>('AddProduct'),
                                 id: value,
+                                token: user.user.token,
                               ),
                             ),
                           )
@@ -183,13 +186,25 @@ class _ShopState extends State<Shop> {
                         mainAxisSize: MainAxisSize.max,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Padding(
+                          /* Padding(
                             padding: const EdgeInsetsDirectional.fromSTEB(
                                 16, 0, 0, 0),
-                            child: Text(
-                              'Top Beaches',
-                              style: FlutterFlowTheme.of(context).labelMedium,
-                            ),
+                            child: () {
+                              final user = Provider.of<UserProvider>(context);
+                              if (user.user.role == "Customer") {
+                                return Text(
+                                  'Categories',
+                                  style:
+                                      FlutterFlowTheme.of(context).labelMedium,
+                                );
+                              } else {
+                                return Text(
+                                  'My Products',
+                                  style:
+                                      FlutterFlowTheme.of(context).labelMedium,
+                                );
+                              }
+                            }(),
                           ),
                           Padding(
                             padding: const EdgeInsetsDirectional.fromSTEB(
@@ -211,7 +226,7 @@ class _ShopState extends State<Shop> {
                                 ].divide(const SizedBox(width: 16)),
                               ),
                             ),
-                          ),
+                          ), */
                           Container(
                             width: double.infinity,
                             decoration: BoxDecoration(
@@ -223,25 +238,38 @@ class _ShopState extends State<Shop> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Padding(
-                                  padding: const EdgeInsetsDirectional.fromSTEB(
-                                      16, 16, 0, 12),
-                                  child: Text(
-                                    'Recent Properties',
-                                    style: FlutterFlowTheme.of(context)
-                                        .labelMedium,
-                                  ),
-                                ),
+                                    padding:
+                                        const EdgeInsetsDirectional.fromSTEB(
+                                            16, 16, 0, 12),
+                                    child: () {
+                                      final user =
+                                          Provider.of<UserProvider>(context);
+                                      if (user.user.role == "Customer") {
+                                        return Text(
+                                          'Recommended for you',
+                                          style: FlutterFlowTheme.of(context)
+                                              .labelMedium,
+                                        );
+                                      } else {
+                                        return Text(
+                                          'My Products',
+                                          style: FlutterFlowTheme.of(context)
+                                              .labelMedium,
+                                        );
+                                      }
+                                    }()),
                                 Padding(
                                   padding: const EdgeInsetsDirectional.fromSTEB(
                                       0, 0, 0, 44),
                                   child: FutureBuilder(
                                     future: () async {
-                                      final user = Provider.of<UserProvider>(context);
+                                      final user =
+                                          Provider.of<UserProvider>(context);
                                       // Simulate a network request
                                       try {
                                         final response = await http.get(
                                             Uri.parse(
-                                                'http://10.0.2.2:5157/api/v1/MonitoredProduct?page=1&pageSize=10'),
+                                                'http://10.0.2.2:5157/api/v1/StoreProduct?page=1&pageSize=10'),
                                             headers: {
                                               'Content-Type':
                                                   'application/json',
@@ -249,8 +277,10 @@ class _ShopState extends State<Shop> {
                                               'Authorization':
                                                   'Bearer ${user.user.token}',
                                             });
-                                        final body = jsonDecode(response.body) as Map<String, dynamic>;
-                                        final data = body['data'] as List<dynamic>;
+                                        final body = jsonDecode(response.body)
+                                            as Map<String, dynamic>;
+                                        final data =
+                                            body['data'] as List<dynamic>;
                                         print(data[0]['id']);
                                         print(data[0]['name']);
                                         print(data[0]['description']);
@@ -258,16 +288,23 @@ class _ShopState extends State<Shop> {
                                         print(data[0]['expirationDate']);
                                         print(data[0]['categories']);
 
-                                        List<ProductInfoModel> products = [];
+                                        List<StoreProductModel> products = [];
                                         for (var i = 0; i < data.length; i++) {
-                                          products.add(ProductInfoModel(
+                                          products.add(StoreProductModel(
+                                              originalPrice: data[i]
+                                                  ['originalPrice'],
+                                              percentDiscount: data[i]
+                                                  ['percentDiscount'],
+                                              business: data[i]['business'],
                                               id: data[i]['id'],
                                               name: data[i]['name'],
-                                              description: data[i]['description'],
+                                              description: data[i]
+                                                  ['description'],
                                               photo: data[i]['photo'],
-                                              expirationDate: data[i]['expirationDate'],
-                                              categories: data[i]['categories']));
-                                          
+                                              expirationDate: data[i]
+                                                  ['expirationDate'],
+                                              categories: data[i]
+                                                  ['categories']));
                                         }
                                         print(response.statusCode);
                                         if (response.statusCode == 200) {
@@ -295,13 +332,17 @@ class _ShopState extends State<Shop> {
                                         shrinkWrap: true,
                                         scrollDirection: Axis.vertical,
                                         children: [
-                                          for (var product in shopGetProductsResponse)
+                                          for (var product
+                                              in shopGetProductsResponse)
                                             ProductCard(
                                               id: product.id,
                                               imageUrl: product.photo,
                                               propertyName: product.name,
-                                              pricePerNight: product.expirationDate,
-                                              location: product.categories.toString(),
+                                              pricePerNight:
+                                                  product.originalPrice.toString(),
+                                              location:
+                                                  product.categories.toString(),
+                                              percentDiscount: product.percentDiscount,
                                             ),
                                         ].divide(const SizedBox(height: 12)),
                                       );

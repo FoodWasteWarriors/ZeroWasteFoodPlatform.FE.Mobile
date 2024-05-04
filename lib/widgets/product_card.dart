@@ -11,6 +11,7 @@ class ProductCard extends StatelessWidget {
   final String propertyName;
   final String pricePerNight;
   final String location;
+  final int percentDiscount;
 
   const ProductCard({
     Key? key,
@@ -19,6 +20,7 @@ class ProductCard extends StatelessWidget {
     required this.propertyName,
     required this.pricePerNight,
     required this.location,
+    required this.percentDiscount,
   }) : super(key: key);
 
   @override
@@ -108,7 +110,7 @@ class ProductCard extends StatelessWidget {
                                           const EdgeInsetsDirectional.fromSTEB(
                                               8, 0, 8, 0),
                                       child: Text(
-                                        '12 nights available',
+                                        '$percentDiscount% OFF',
                                         style: Theme.of(context)
                                             .textTheme
                                             .bodyText1,
@@ -144,12 +146,13 @@ class ProductCard extends StatelessWidget {
                               text: '\$$pricePerNight',
                               style: TextStyle(
                                 color: Theme.of(context).primaryColor,
+                                decoration: TextDecoration.lineThrough,
                               ),
                             ),
                             TextSpan(
-                              text: ' /night',
-                              style: Theme.of(context).textTheme.caption,
-                            )
+                              text: ' \$${(double.parse(pricePerNight) * (1 - percentDiscount / 100)).toStringAsFixed(2)}',
+                              style: Theme.of(context).textTheme.bodyText2,
+                            ),
                           ],
                           style: Theme.of(context).textTheme.bodyText2,
                         ),

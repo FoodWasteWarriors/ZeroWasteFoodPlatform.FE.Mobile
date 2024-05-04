@@ -40,32 +40,12 @@ class _HomeState extends State<Home> {
               color: Colors.white,
               child: const Shop(),
             ),
-            /* Container(
-              key: const ValueKey<String>('Create Account'),
-              color: Colors.white,
-              child: const Center(
-                child: CreateAccount(),
-              ),
-            ),
             Container(
-              key: const ValueKey<String>('Sign In'),
-              color: Colors.white,
-              child: const Center(
-                child: SignIn(),
-              ),
-            ), */
-            Container(
-                key: const ValueKey<String>('Shop'),
+                key: const ValueKey<String>('Profile'),
                 color: Colors.white,
                 child: const Center(
                   child: Profile(),
                 )),
-            /* Container(
-                key: const ValueKey<String>('Add'),
-                color: Colors.white,
-                child: const Center(
-                  child: AddProduct()
-                )), */
           ][selectedIndex],
         ),
         bottomNavigationBar: BottomNavigationBar(
@@ -75,21 +55,9 @@ class _HomeState extends State<Home> {
               icon: Icon(Icons.request_page),
               label: 'Shop',
             ),
-/*             BottomNavigationBarItem(
-              icon: Icon(Icons.home),
-              label: 'Create Account',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.add_box_outlined),
-              label: 'Sign In',
-            ), */
             BottomNavigationBarItem(
               icon: Icon(Icons.person),
               label: 'Profile',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.add),
-              label: 'Add',
             ),
           ],
           currentIndex: selectedIndex,

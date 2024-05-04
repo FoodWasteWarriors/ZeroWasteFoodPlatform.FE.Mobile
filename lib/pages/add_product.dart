@@ -1,14 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
+import 'package:food_waste_2/providers/user_provider.dart';
+import 'package:provider/provider.dart';
+import 'package:http/http.dart' as http;
 
 const List<String> list = <String>['One', 'Two', 'Three', 'Four'];
 
 class AddProduct extends StatefulWidget {
   final String id;
+  final String token;
 
   const AddProduct({
     super.key,
     required this.id,
+    required this.token,
   });
 
   @override
@@ -18,7 +23,7 @@ class AddProduct extends StatefulWidget {
 class _AddProductWidgetState extends State<AddProduct> {
   final scaffoldKey = GlobalKey<ScaffoldState>();
   String dropdownValue = list.first;
-  String? choiceChipsValue;
+  List<String>? choiceChipsValue;
 
   final fullNameController = TextEditingController();
   final fullNameFocusNode = FocusNode();
@@ -26,11 +31,13 @@ class _AddProductWidgetState extends State<AddProduct> {
   final ageFocusNode = FocusNode();
   final phoneNumberController = TextEditingController();
   final phoneNumberFocusNode = FocusNode();
-  final dateOfBirthController = TextEditingController();
-  final dateOfBirthFocusNode = FocusNode();
+  final dateController = TextEditingController();
+  final dateFocusNode = FocusNode();
   final descriptionController = TextEditingController();
   final descriptionFocusNode = FocusNode();
   FormFieldController<List<String>>? choiceChipsValueController;
+
+  DateTime _dateOfBirth = DateTime(1900);
 
   @override
   void initState() {
@@ -131,7 +138,7 @@ class _AddProductWidgetState extends State<AddProduct> {
                                   textCapitalization: TextCapitalization.words,
                                   obscureText: false,
                                   decoration: InputDecoration(
-                                    labelText: 'Full name*',
+                                    labelText: 'Name',
                                     labelStyle: FlutterFlowTheme.of(context)
                                         .headlineMedium
                                         .override(
@@ -203,14 +210,14 @@ class _AddProductWidgetState extends State<AddProduct> {
                                       ),
                                   cursorColor: const Color(0xFF6F61EF),
                                 ),
-                                TextFormField(
+                                /* TextFormField(
                                   controller: ageController,
                                   focusNode: ageFocusNode,
                                   autofocus: true,
                                   textCapitalization: TextCapitalization.words,
                                   obscureText: false,
                                   decoration: InputDecoration(
-                                    labelText: 'Age*',
+                                    labelText: 'Description',
                                     labelStyle: FlutterFlowTheme.of(context)
                                         .labelLarge
                                         .override(
@@ -280,7 +287,7 @@ class _AddProductWidgetState extends State<AddProduct> {
                                         fontWeight: FontWeight.w600,
                                       ),
                                   cursorColor: const Color(0xFF6F61EF),
-                                ),
+                                ), */
                                 TextFormField(
                                   controller: phoneNumberController,
                                   focusNode: phoneNumberFocusNode,
@@ -288,7 +295,7 @@ class _AddProductWidgetState extends State<AddProduct> {
                                   textCapitalization: TextCapitalization.words,
                                   obscureText: false,
                                   decoration: InputDecoration(
-                                    labelText: 'Phone number',
+                                    labelText: 'Photo',
                                     labelStyle: FlutterFlowTheme.of(context)
                                         .labelLarge
                                         .override(
@@ -362,13 +369,29 @@ class _AddProductWidgetState extends State<AddProduct> {
                                   cursorColor: const Color(0xFF6F61EF),
                                 ),
                                 TextFormField(
-                                  controller: dateOfBirthController,
-                                  focusNode: dateOfBirthFocusNode,
+                                  controller: dateController,
+                                  focusNode: dateFocusNode,
+                                  onTap: () async {
+                                    DateTime? date = DateTime(1900);
+                                    FocusScope.of(context)
+                                        .requestFocus(FocusNode());
+
+                                    date = await showDatePicker(
+                                        context: context,
+                                        initialDate: DateTime.now(),
+                                        firstDate: DateTime(1900),
+                                        lastDate: DateTime(2100));
+
+                                    _dateOfBirth = date ?? _dateOfBirth;
+                                    dateController.text = date != null
+                                        ? date.toString().substring(0, 10)
+                                        : dateController.text;
+                                  },
                                   autofocus: true,
                                   textCapitalization: TextCapitalization.words,
                                   obscureText: false,
                                   decoration: InputDecoration(
-                                    labelText: 'Date of birth*',
+                                    labelText: 'Expiration Date',
                                     labelStyle: FlutterFlowTheme.of(context)
                                         .labelLarge
                                         .override(
@@ -423,8 +446,7 @@ class _AddProductWidgetState extends State<AddProduct> {
                                     ),
                                     filled: true,
                                     fillColor:
-                                        (dateOfBirthFocusNode?.hasFocus ??
-                                                false)
+                                        (dateFocusNode?.hasFocus ?? false)
                                             ? const Color(0x4D9489F5)
                                             : Colors.white,
                                     contentPadding:
@@ -441,18 +463,7 @@ class _AddProductWidgetState extends State<AddProduct> {
                                       ),
                                   cursorColor: const Color(0xFF6F61EF),
                                 ),
-                                Text(
-                                  'Insurance Provider',
-                                  style: FlutterFlowTheme.of(context)
-                                      .labelMedium
-                                      .override(
-                                        fontFamily: 'Outfit',
-                                        color: const Color(0xFF606A85),
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.w500,
-                                      ),
-                                ),
-                                DropdownButton<String>(
+                                /* DropdownButton<String>(
                                   value: dropdownValue,
                                   icon: const Icon(Icons.arrow_downward),
                                   elevation: 16,
@@ -475,9 +486,9 @@ class _AddProductWidgetState extends State<AddProduct> {
                                       child: Text(value),
                                     );
                                   }).toList(),
-                                ),
+                                ), */
                                 Text(
-                                  'Gender',
+                                  'Categories',
                                   style: FlutterFlowTheme.of(context)
                                       .labelMedium
                                       .override(
@@ -489,12 +500,19 @@ class _AddProductWidgetState extends State<AddProduct> {
                                 ),
                                 FlutterFlowChoiceChips(
                                   options: const [
-                                    ChipData('Female'),
-                                    ChipData('Male'),
-                                    ChipData('Other')
+                                    ChipData('Meats'),
+                                    ChipData('Vegetables'),
+                                    ChipData('Fruits'),
                                   ],
-                                  onChanged: (val) => setState(() =>
-                                      choiceChipsValue = val?.firstOrNull),
+                                  onChanged: (val) => setState(
+                                    () {
+                                      print(val.toString());
+                                      if (val != null) {
+                                        choiceChipsValue = val;
+                                      }
+                                      ;
+                                    },
+                                  ),
                                   selectedChipStyle: ChipStyle(
                                     backgroundColor: const Color(0x4C39D2C0),
                                     textStyle: FlutterFlowTheme.of(context)
@@ -531,7 +549,7 @@ class _AddProductWidgetState extends State<AddProduct> {
                                   ),
                                   chipSpacing: 12,
                                   rowSpacing: 12,
-                                  multiselect: false,
+                                  multiselect: true,
                                   alignment: WrapAlignment.start,
                                   controller: choiceChipsValueController ??=
                                       FormFieldController<List<String>>(
@@ -546,7 +564,7 @@ class _AddProductWidgetState extends State<AddProduct> {
                                   obscureText: false,
                                   decoration: InputDecoration(
                                     labelText:
-                                        'Please describe your symptoms...',
+                                        'Description...',
                                     labelStyle: FlutterFlowTheme.of(context)
                                         .labelLarge
                                         .override(
@@ -649,8 +667,39 @@ class _AddProductWidgetState extends State<AddProduct> {
                       print(fullNameController.text);
                       print(ageController.text);
                       print(phoneNumberController.text);
-                      print(dateOfBirthController.text);
+                      print(dateController.text);
                       print(descriptionController.text);
+
+                      // Simulate a network request
+                      try {
+                        final response = await http.post(
+                            Uri.parse(
+                                'http://10.0.2.2:5157/api/v1/MonitoredProduct'),
+                            headers: {
+                              'Content-Type': 'application/json',
+                              'Accept': '*/*',
+                              'Authorization': 'Bearer ${widget.token}',
+                            },
+                            body: jsonEncode({
+                              'name': fullNameController.text,
+                              'description': descriptionController.text,
+                              'photo': phoneNumberController.text,
+                              'expirationDate': dateController.text,
+                              'categoriesIds': choiceChipsValue,
+                            }));
+
+                        print(response.body);
+                        print(response.statusCode);
+                        if (response.statusCode == 200) {
+                          print('Product added');
+                          Navigator.pop(context);
+                        } else {
+                          print('Failed to get products');
+                          return null;
+                        }
+                      } catch (e) {
+                        print(e);
+                      }
                     },
                     text: 'Submit Form',
                     options: FFButtonOptions(
