@@ -3,6 +3,7 @@ import 'package:flutterflow_ui/flutterflow_ui.dart';
 import 'package:food_waste_2/models/product_info.dart';
 import 'package:food_waste_2/models/store_product.dart';
 import 'package:food_waste_2/pages/add_product.dart';
+import 'package:food_waste_2/pages/list_products.dart';
 import 'package:food_waste_2/providers/user_provider.dart';
 import 'package:food_waste_2/services/product.dart';
 import 'package:food_waste_2/widgets/recent_product_card.dart';
@@ -16,6 +17,7 @@ import 'package:food_waste_2/models/user.dart';
 import 'package:food_waste_2/widgets/product_card.dart';
 import 'package:food_waste_2/widgets/search_bar.dart';
 import 'package:http/http.dart' as http;
+import 'package:badges/badges.dart' as badges;
 
 class Shop extends StatefulWidget {
   const Shop({super.key});
@@ -27,6 +29,8 @@ class Shop extends StatefulWidget {
 class _ShopState extends State<Shop> {
   bool canRequestFocus = true;
   String barcodeValue = "";
+  List<StoreProductModel> products = [];
+  bool isMounted = false;
 
   // text controller
   final TextEditingController textController = TextEditingController();
@@ -34,8 +38,120 @@ class _ShopState extends State<Shop> {
   // focus node
   final FocusNode textFocusNode = FocusNode();
 
+  List<StoreProductModel> notificationProducts = [];
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
+    final user = Provider.of<UserProvider>(context);
+    () async {
+      if (isMounted) return;
+      isMounted = true;
+      if (user.user.role == "Customer") {
+        try {
+          final response = await http.get(
+              Uri.parse(
+                  'http://10.0.2.2:5157/api/v1/StoreProduct?page=1&pageSize=10'),
+              headers: {
+                'Content-Type': 'application/json',
+                'Accept': '*/*',
+                'Authorization': 'Bearer ${user.user.token}',
+              });
+          final body = jsonDecode(response.body) as Map<String, dynamic>;
+          final data = body['data'] as List<dynamic>;
+          print(data[0]['id']);
+          print(data[0]['name']);
+          print(data[0]['description']);
+          print(data[0]['photo']);
+          print(data[0]['expirationDate']);
+          print(data[0]['categories']);
+
+          List<StoreProductModel> tempProducts = [];
+
+          for (var i = 0; i < data.length; i++) {
+            tempProducts.add(StoreProductModel(
+                originalPrice: data[i]['originalPrice'],
+                percentDiscount: data[i]['percentDiscount'],
+                business: data[i]['business'],
+                id: data[i]['id'],
+                name: data[i]['name'],
+                description: data[i]['description'],
+                photo: data[i]['photo'],
+                expirationDate: data[i]['expirationDate'],
+                categories: data[i]['categories']));
+          }
+
+          setState(() {
+            products = tempProducts.toList();
+          });
+
+          var leastExpirationDate = DateTime.now().add(const Duration(days: 3));
+
+          for (var i = 0; i < data.length; i++) {
+            var expirationDate = DateTime.parse(data[i]['expirationDate']);
+            if (expirationDate.isBefore(leastExpirationDate)) {
+              notificationProducts.add(StoreProductModel(
+                  originalPrice: data[i]['originalPrice'],
+                  percentDiscount: data[i]['percentDiscount'],
+                  business: data[i]['business'],
+                  id: data[i]['id'],
+                  name: data[i]['name'],
+                  description: data[i]['description'],
+                  photo: data[i]['photo'],
+                  expirationDate: data[i]['expirationDate'],
+                  categories: data[i]['categories']));
+            }
+          }
+        } catch (e) {
+          print(e);
+        }
+      } else {
+        try {
+          final response = await http.get(
+              Uri.parse(
+                  'http://10.0.2.2:5157/api/v1/StoreProduct/user/${user.user.id}'),
+              headers: {
+                'Content-Type': 'application/json',
+                'Accept': '*/*',
+                'Authorization': 'Bearer ${user.user.token}',
+              });
+          final body = jsonDecode(response.body) as Map<String, dynamic>;
+          final data = body['data'] as List<dynamic>;
+          print(data[0]['id']);
+          print(data[0]['name']);
+          print(data[0]['description']);
+          print(data[0]['photo']);
+          print(data[0]['expirationDate']);
+          print(data[0]['categories']);
+
+          List<StoreProductModel> tempProducts = [];
+
+          for (var i = 0; i < data.length; i++) {
+            tempProducts.add(StoreProductModel(
+                originalPrice: data[i]['originalPrice'],
+                percentDiscount: data[i]['percentDiscount'],
+                business: data[i]['business'],
+                id: data[i]['id'],
+                name: data[i]['name'],
+                description: data[i]['description'],
+                photo: data[i]['photo'],
+                expirationDate: data[i]['expirationDate'],
+                categories: data[i]['categories']));
+          }
+
+          setState(() {
+            products = tempProducts.toList();
+          });
+        } catch (e) {
+          print(e);
+        }
+      }
+    }();
+
     return FutureBuilder<UserModel>(
       future: UserService.getUser(),
       builder: (context, snapshot) {
@@ -74,6 +190,7 @@ class _ShopState extends State<Shop> {
                                 key: const ValueKey<String>('AddProduct'),
                                 id: value,
                                 token: user.user.token,
+                                role: user.user.role,
                               ),
                             ),
                           )
@@ -135,21 +252,48 @@ class _ShopState extends State<Shop> {
                                   FlutterFlowTheme.of(context).headlineMedium,
                             ),
                           ),
-                          Padding(
-                            padding: const EdgeInsetsDirectional.fromSTEB(
-                                0, 0, 16, 0),
-                            child: FlutterFlowIconButton(
-                              borderColor: Colors.transparent,
-                              borderRadius: 20,
-                              buttonSize: 40,
-                              icon: Icon(
-                                Icons.notifications_none,
-                                color: FlutterFlowTheme.of(context).primaryText,
-                                size: 24,
+                          badges.Badge(
+                            position: badges.BadgePosition.bottomStart(
+                                bottom: 0, start: 0),
+                            badgeContent: () {
+                              if (user.user.role == "Customer") {
+                                return Text(
+                                  '${notificationProducts.length}',
+                                  style: FlutterFlowTheme.of(context).bodyText1,
+                                );
+                              }
+                              ;
+                            }(),
+                            child: Padding(
+                              padding: const EdgeInsetsDirectional.fromSTEB(
+                                  0, 0, 16, 0),
+                              child: FlutterFlowIconButton(
+                                borderColor: Colors.transparent,
+                                borderRadius: 20,
+                                buttonSize: 40,
+                                icon: Icon(
+                                  Icons.notifications_none,
+                                  color:
+                                      FlutterFlowTheme.of(context).primaryText,
+                                  size: 24,
+                                ),
+                                onPressed: () {
+                                  print('IconButton pressed 1...');
+                                  if (user.user.role == "Customer") {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => ListProducts(
+                                          key: const ValueKey<String>(
+                                              'AddProduct'),
+                                          products: notificationProducts,
+                                        ),
+                                      ),
+                                    );
+                                  }
+                                  ;
+                                },
                               ),
-                              onPressed: () {
-                                print('IconButton pressed ...');
-                              },
                             ),
                           ),
                         ],
@@ -174,8 +318,107 @@ class _ShopState extends State<Shop> {
                         child: StickySearchBar(
                           controller: textController,
                           focusNode: textFocusNode,
-                          onChanged: (value) {
-                            print("SearchBar onChanged: $value");
+                          onChanged: (value) async {
+                            // print notification products with iteration
+                            for (var product in notificationProducts) {
+                              print('Notification Product: ${product.name}');
+                            }
+
+                            if (user.user.role == "Customer") {
+                              try {
+                                final response = await http.get(
+                                    Uri.parse(
+                                        'http://10.0.2.2:5157/api/v1/StoreProduct?page=1&pageSize=10&NameQuery=$value'),
+                                    headers: {
+                                      'Content-Type': 'application/json',
+                                      'Accept': '*/*',
+                                      'Authorization':
+                                          'Bearer ${user.user.token}',
+                                    });
+                                final body = jsonDecode(response.body)
+                                    as Map<String, dynamic>;
+                                final data = body['data'] as List<dynamic>;
+                                print(data[0]['id']);
+                                print(data[0]['name']);
+                                print(data[0]['description']);
+                                print(data[0]['photo']);
+                                print(data[0]['expirationDate']);
+                                print(data[0]['categories']);
+
+                                List<StoreProductModel> tempProducts = [];
+
+                                for (var i = 0; i < data.length; i++) {
+                                  tempProducts.add(StoreProductModel(
+                                      originalPrice: data[i]['originalPrice'],
+                                      percentDiscount: data[i]
+                                          ['percentDiscount'],
+                                      business: data[i]['business'],
+                                      id: data[i]['id'],
+                                      name: data[i]['name'],
+                                      description: data[i]['description'],
+                                      photo: data[i]['photo'],
+                                      expirationDate: data[i]['expirationDate'],
+                                      categories: data[i]['categories']));
+                                }
+
+                                setState(() {
+                                  products = tempProducts
+                                      .where((element) => element.name
+                                          .toLowerCase()
+                                          .contains(value.toLowerCase()))
+                                      .toList();
+                                });
+                              } catch (e) {
+                                print(e);
+                              }
+                            } else {
+                              try {
+                                final response = await http.get(
+                                    Uri.parse(
+                                        'http://10.0.2.2:5157/api/v1/StoreProduct/user/${user.user.id}'),
+                                    headers: {
+                                      'Content-Type': 'application/json',
+                                      'Accept': '*/*',
+                                      'Authorization':
+                                          'Bearer ${user.user.token}',
+                                    });
+                                final body = jsonDecode(response.body)
+                                    as Map<String, dynamic>;
+                                final data = body['data'] as List<dynamic>;
+                                print(data[0]['id']);
+                                print(data[0]['name']);
+                                print(data[0]['description']);
+                                print(data[0]['photo']);
+                                print(data[0]['expirationDate']);
+                                print(data[0]['categories']);
+
+                                List<StoreProductModel> tempProducts = [];
+
+                                for (var i = 0; i < data.length; i++) {
+                                  tempProducts.add(StoreProductModel(
+                                      originalPrice: data[i]['originalPrice'],
+                                      percentDiscount: data[i]
+                                          ['percentDiscount'],
+                                      business: data[i]['business'],
+                                      id: data[i]['id'],
+                                      name: data[i]['name'],
+                                      description: data[i]['description'],
+                                      photo: data[i]['photo'],
+                                      expirationDate: data[i]['expirationDate'],
+                                      categories: data[i]['categories']));
+                                }
+
+                                setState(() {
+                                  products = tempProducts
+                                      .where((element) => element.name
+                                          .toLowerCase()
+                                          .contains(value.toLowerCase()))
+                                      .toList();
+                                });
+                              } catch (e) {
+                                print(e);
+                              }
+                            }
                           },
                           onFilterPressed: () {
                             print("Filter button pressed");
@@ -258,127 +501,25 @@ class _ShopState extends State<Shop> {
                                         );
                                       }
                                     }()),
-                                Padding(
-                                  padding: const EdgeInsetsDirectional.fromSTEB(
-                                      0, 0, 0, 44),
-                                  child: FutureBuilder(
-                                    future: () async {
-                                      final user =
-                                          Provider.of<UserProvider>(context);
-                                      // Simulate a network request
-                                      try {
-                                        final response = await http.get(
-                                            Uri.parse(
-                                                'http://10.0.2.2:5157/api/v1/StoreProduct?page=1&pageSize=10'),
-                                            headers: {
-                                              'Content-Type':
-                                                  'application/json',
-                                              'Accept': '*/*',
-                                              'Authorization':
-                                                  'Bearer ${user.user.token}',
-                                            });
-                                        final body = jsonDecode(response.body)
-                                            as Map<String, dynamic>;
-                                        final data =
-                                            body['data'] as List<dynamic>;
-                                        print(data[0]['id']);
-                                        print(data[0]['name']);
-                                        print(data[0]['description']);
-                                        print(data[0]['photo']);
-                                        print(data[0]['expirationDate']);
-                                        print(data[0]['categories']);
-
-                                        List<StoreProductModel> products = [];
-                                        for (var i = 0; i < data.length; i++) {
-                                          products.add(StoreProductModel(
-                                              originalPrice: data[i]
-                                                  ['originalPrice'],
-                                              percentDiscount: data[i]
-                                                  ['percentDiscount'],
-                                              business: data[i]['business'],
-                                              id: data[i]['id'],
-                                              name: data[i]['name'],
-                                              description: data[i]
-                                                  ['description'],
-                                              photo: data[i]['photo'],
-                                              expirationDate: data[i]
-                                                  ['expirationDate'],
-                                              categories: data[i]
-                                                  ['categories']));
-                                        }
-                                        print(response.statusCode);
-                                        if (response.statusCode == 200) {
-                                          print(data);
-                                          return products;
-                                        } else {
-                                          print('Failed to get products');
-                                          return null;
-                                        }
-                                      } catch (e) {
-                                        print(e);
-                                      }
-                                    }(),
-                                    builder: (context, snapshot) {
-                                      if (!snapshot.hasData) {
-                                        return const Center(
-                                          child: CircularProgressIndicator(),
-                                        );
-                                      }
-                                      final shopGetProductsResponse =
-                                          snapshot.data!;
-                                      return ListView(
-                                        padding: EdgeInsets.zero,
-                                        primary: false,
-                                        shrinkWrap: true,
-                                        scrollDirection: Axis.vertical,
-                                        children: [
-                                          for (var product
-                                              in shopGetProductsResponse)
-                                            ProductCard(
-                                              id: product.id,
-                                              imageUrl: product.photo,
-                                              propertyName: product.name,
-                                              pricePerNight:
-                                                  product.originalPrice.toString(),
-                                              location:
-                                                  product.categories.toString(),
-                                              percentDiscount: product.percentDiscount,
-                                            ),
-                                        ].divide(const SizedBox(height: 12)),
-                                      );
-                                    },
-                                  ),
-
-                                  /* ListView(
-                                    padding: EdgeInsets.zero,
-                                    primary: false,
-                                    shrinkWrap: true,
-                                    scrollDirection: Axis.vertical,
-                                    children: [
-                                      const ProductCard(
-                                        id: '1',
-                                        imageUrl:
-                                            'https://images.unsplash.com/photo-1597475681177-809cfdc76cd2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8YmVhY2hob3VzZXxlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&w=900&q=60',
-                                        propertyName: 'propertyName1',
-                                        pricePerNight: 'pricePerNight',
-                                        location: 'location',
+                                ListView(
+                                  padding: EdgeInsets.zero,
+                                  primary: false,
+                                  shrinkWrap: true,
+                                  scrollDirection: Axis.vertical,
+                                  children: [
+                                    for (var product in products)
+                                      ProductCard(
+                                        id: product.id,
+                                        imageUrl: product.photo,
+                                        propertyName: product.name,
+                                        pricePerNight:
+                                            product.originalPrice.toString(),
+                                        location: product.categories.toString(),
+                                        percentDiscount:
+                                            product.percentDiscount,
+                                        expirationDate: product.expirationDate,
                                       ),
-                                      const ProductCard(
-                                          id: '2',
-                                          imageUrl:
-                                              "https://images.unsplash.com/photo-1597475681177-809cfdc76cd2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8YmVhY2hob3VzZXxlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&w=900&q=60",
-                                          propertyName: "propertyName",
-                                          pricePerNight: "pricePerNight",
-                                          location: "location"),
-                                      const ProductCard(
-                                          id: '3',
-                                          imageUrl:
-                                              "https://images.unsplash.com/photo-1597475681177-809cfdc76cd2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8YmVhY2hob3VzZXxlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&w=900&q=60",
-                                          propertyName: "propertyName",
-                                          pricePerNight: "pricePerNight",
-                                          location: "location"),
-                                    ].divide(const SizedBox(height: 12)),
-                                  ), */
+                                  ].divide(const SizedBox(height: 12)),
                                 ),
                               ],
                             ),

@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
 import 'package:food_waste_2/pages/add_product.dart';
 import 'package:food_waste_2/pages/product_details.dart';
+import 'package:food_waste_2/providers/user_provider.dart';
+import 'package:provider/provider.dart';
 
 class ProductCard extends StatelessWidget {
   final String id;
@@ -12,6 +14,7 @@ class ProductCard extends StatelessWidget {
   final String pricePerNight;
   final String location;
   final int percentDiscount;
+  final String expirationDate;
 
   const ProductCard({
     Key? key,
@@ -21,10 +24,12 @@ class ProductCard extends StatelessWidget {
     required this.pricePerNight,
     required this.location,
     required this.percentDiscount,
+    required this.expirationDate,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final user = Provider.of<UserProvider>(context);
     return Padding(
       padding: const EdgeInsetsDirectional.fromSTEB(16, 0, 16, 0),
       child: GestureDetector(
@@ -39,6 +44,9 @@ class ProductCard extends StatelessWidget {
                 propertyName: propertyName,
                 pricePerNight: pricePerNight,
                 location: location,
+                percentDiscount: percentDiscount,
+                token: user.user.token,
+                expirationDate: expirationDate,
               ),
             ),
           );
@@ -150,7 +158,8 @@ class ProductCard extends StatelessWidget {
                               ),
                             ),
                             TextSpan(
-                              text: ' \$${(double.parse(pricePerNight) * (1 - percentDiscount / 100)).toStringAsFixed(2)}',
+                              text:
+                                  ' \$${(double.parse(pricePerNight) * (1 - percentDiscount / 100)).toStringAsFixed(2)}',
                               style: Theme.of(context).textTheme.bodyText2,
                             ),
                           ],
@@ -160,10 +169,18 @@ class ProductCard extends StatelessWidget {
                     ),
                     Padding(
                       padding: const EdgeInsetsDirectional.fromSTEB(0, 4, 0, 8),
-                      child: Text(
-                        location,
-                        style: Theme.of(context).textTheme.bodyText2,
-                      ),
+                      child: () {
+                        DateTime parseDate =
+                            new DateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS")
+                                .parse(expirationDate);
+                        var inputDate = DateTime.parse(parseDate.toString());
+                        var outputFormat = DateFormat('MM/dd/yyyy hh:mm a');
+                        var outputDate = outputFormat.format(inputDate);
+                        return Text(
+                          'Expires: $outputDate',
+                          style: Theme.of(context).textTheme.bodyText2,
+                        );
+                      }(),
                     ),
                   ],
                 ),

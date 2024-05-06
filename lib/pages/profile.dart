@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:food_waste_2/models/user.dart';
+import 'package:food_waste_2/pages/shopping_list.dart';
 import 'package:food_waste_2/providers/user_provider.dart';
 import 'package:food_waste_2/services/auth.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -144,6 +145,86 @@ class _ProfileState extends State<Profile> {
                 ),
               ),
             ),
+            Padding(
+                padding: const EdgeInsetsDirectional.fromSTEB(0, 1, 0, 0),
+                child: () {
+                  return GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => ShoppingList(
+                            key: const ValueKey<String>('AddProduct'),
+                            id: user.user.id,
+                            token: user.user.token,
+                          ),
+                        ),
+                      );
+                    },
+                    child: Padding(
+                      padding:
+                          const EdgeInsetsDirectional.fromSTEB(16, 12, 16, 0),
+                      child: () {
+                        if (user.user.role == 'Customer') {
+                          return Container(
+                            width: double.infinity,
+                            height: 60,
+                            decoration: BoxDecoration(
+                              color: FlutterFlowTheme.of(context)
+                                  .secondaryBackground,
+                              boxShadow: const [
+                                BoxShadow(
+                                  blurRadius: 5,
+                                  color: Color(0x3416202A),
+                                  offset: Offset(0, 2),
+                                )
+                              ],
+                              borderRadius: BorderRadius.circular(12),
+                              shape: BoxShape.rectangle,
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.all(8),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.max,
+                                children: [
+                                  Icon(
+                                    Icons.account_circle_outlined,
+                                    color: FlutterFlowTheme.of(context)
+                                        .secondaryText,
+                                    size: 24,
+                                  ),
+                                  Expanded(
+                                    child: Padding(
+                                      padding:
+                                          const EdgeInsetsDirectional.fromSTEB(
+                                              12, 0, 0, 0),
+                                      child: Text(
+                                        'Shopping List',
+                                        style: FlutterFlowTheme.of(context)
+                                            .bodyLarge,
+                                      ),
+                                    ),
+                                  ),
+                                  Align(
+                                    alignment:
+                                        const AlignmentDirectional(0.9, 0),
+                                    child: Icon(
+                                      Icons.arrow_forward_ios,
+                                      color: FlutterFlowTheme.of(context)
+                                          .secondaryText,
+                                      size: 18,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          );
+                        }
+                        ;
+                      }(),
+                    ),
+                  );
+                }()),
             Padding(
               padding: const EdgeInsetsDirectional.fromSTEB(16, 16, 0, 0),
               child: Text(

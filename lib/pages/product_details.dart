@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import 'package:http/http.dart' as http;
 
 class ProductDetails extends StatefulWidget {
   final String id;
@@ -11,6 +12,9 @@ class ProductDetails extends StatefulWidget {
   final String propertyName;
   final String pricePerNight;
   final String location;
+  final int percentDiscount;
+  final String token;
+  final String expirationDate;
 
   const ProductDetails({
     super.key,
@@ -19,6 +23,9 @@ class ProductDetails extends StatefulWidget {
     required this.propertyName,
     required this.pricePerNight,
     required this.location,
+    required this.percentDiscount,
+    required this.token,
+    required this.expirationDate,
   });
 
   @override
@@ -104,30 +111,6 @@ class _ProductDetailsState extends State<ProductDetails> {
                                       ),
                                     ),
                                   ),
-                                  Align(
-                                    alignment:
-                                        const AlignmentDirectional(0.85, -0.4),
-                                    child: Padding(
-                                      padding:
-                                          const EdgeInsetsDirectional.fromSTEB(
-                                              0, 50, 0, 0),
-                                      child: FlutterFlowIconButton(
-                                        borderColor: Colors.transparent,
-                                        borderRadius: 30,
-                                        borderWidth: 1,
-                                        buttonSize: 40,
-                                        fillColor: const Color(0x7F0F1113),
-                                        icon: const Icon(
-                                          Icons.shopping_cart_outlined,
-                                          color: Colors.white,
-                                          size: 20,
-                                        ),
-                                        onPressed: () {
-                                          print('IconButton pressed ...');
-                                        },
-                                      ),
-                                    ),
-                                  ),
                                 ],
                               ),
                             ),
@@ -201,21 +184,35 @@ class _ProductDetailsState extends State<ProductDetails> {
                         const EdgeInsetsDirectional.fromSTEB(24, 16, 24, 0),
                     child: Row(
                       mainAxisSize: MainAxisSize.max,
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          widget.pricePerNight,
-                          style: FlutterFlowTheme.of(context)
-                              .headlineMedium
-                              .override(
-                                fontFamily: 'Outfit',
-                                color: const Color(0xFF0F1113),
-                                fontSize: 24,
-                                letterSpacing: 0,
-                                fontWeight: FontWeight.w500,
-                              ),
+                          '\$${widget.pricePerNight}',
+                          style:
+                              FlutterFlowTheme.of(context).bodyLarge.override(
+                                    fontFamily: 'Outfit',
+                                    color: const Color(0xFF0F1113),
+                                    fontSize: 32,
+                                    letterSpacing: 0,
+                                    fontWeight: FontWeight.w500,
+                                    decoration: TextDecoration.lineThrough,
+                                  ),
                         ),
-                        Container(
+                        const SizedBox(
+                          width: 20,
+                        ),
+                        Text(
+                          '\$${(double.parse(widget.pricePerNight) * (1 - widget.percentDiscount / 100)).toStringAsFixed(2)}',
+                          style:
+                              FlutterFlowTheme.of(context).bodyLarge.override(
+                                    fontFamily: 'Outfit',
+                                    color: const Color(0xFF0F1113),
+                                    fontSize: 32,
+                                    letterSpacing: 0,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                        ),
+                        /* Container(
                           width: 156,
                           height: 50,
                           decoration: BoxDecoration(
@@ -259,9 +256,40 @@ class _ProductDetailsState extends State<ProductDetails> {
                                 setState(() => countControllerValue = count),
                             stepSize: 1,
                           ),
-                        ),
+                        ), */
                       ],
                     ),
+                  ),
+
+                  // expiring date
+                  Padding(
+                    padding:
+                        const EdgeInsetsDirectional.fromSTEB(24, 16, 24, 0),
+                    child: () {
+                      DateTime parseDate =
+                          new DateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS")
+                              .parse(widget.expirationDate);
+                      var inputDate = DateTime.parse(parseDate.toString());
+                      var outputFormat = DateFormat('MM/dd/yyyy hh:mm a');
+                      var outputDate = outputFormat.format(inputDate);
+                      return Row(
+                        mainAxisSize: MainAxisSize.max,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            'Expires on: ${outputDate}',
+                            style:
+                                FlutterFlowTheme.of(context).bodyLarge.override(
+                                      fontFamily: 'Outfit',
+                                      color: const Color(0xFF0F1113),
+                                      fontSize: 16,
+                                      letterSpacing: 0,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                          ),
+                        ],
+                      );
+                    }(),
                   ),
                   /* Padding(
                     padding: const EdgeInsetsDirectional.fromSTEB(24, 8, 0, 0),
@@ -397,35 +425,48 @@ class _ProductDetailsState extends State<ProductDetails> {
               borderRadius: BorderRadius.circular(0),
             ),
             child: Padding(
-              padding: const EdgeInsetsDirectional.fromSTEB(0, 12, 0, 0),
+              padding: const EdgeInsetsDirectional.fromSTEB(0, 30, 0, 0),
               child: GestureDetector(
-                onTap: () {
-                  print('Container pressed ...');
+                onTap: () async {
+                  try {
+                    final response = await http.post(
+                        Uri.parse(
+                            'http://10.0.2.2:5157/api/v1/StoreProduct/add-to-shopping-list'),
+                        headers: {
+                          'Content-Type': 'application/json',
+                          'Accept': '*/*',
+                          'Authorization': 'Bearer ${widget.token}',
+                        },
+                        body: jsonEncode({
+                          'productId': widget.id,
+                        }));
+                    final body =
+                        jsonDecode(response.body) as Map<String, dynamic>;
+                    print(body);
+                    print(response.statusCode);
+                    if (response.statusCode == 200) {
+                      print('Success');
+                    } else {
+                      print('Failed');
+                    }
+                  } catch (e) {
+                    print(e);
+                  }
                 },
                 child: Column(
                   mainAxisSize: MainAxisSize.max,
                   children: [
-                    Text(
-                      'Add To Bag',
-                      style: FlutterFlowTheme.of(context).titleMedium.override(
-                            fontFamily: 'Outfit',
-                            color: Colors.white,
-                            fontSize: 18,
-                            letterSpacing: 0,
-                            fontWeight: FontWeight.w500,
-                          ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsetsDirectional.fromSTEB(0, 4, 0, 0),
+                    Center(
                       child: Text(
-                        '$countControllerValue items added to bag',
-                        style: FlutterFlowTheme.of(context).bodyMedium.override(
-                              fontFamily: 'Plus Jakarta Sans',
-                              color: const Color(0x99FFFFFF),
-                              fontSize: 14,
-                              letterSpacing: 0,
-                              fontWeight: FontWeight.w500,
-                            ),
+                        'Add To Shopping List',
+                        style:
+                            FlutterFlowTheme.of(context).titleMedium.override(
+                                  fontFamily: 'Outfit',
+                                  color: Colors.white,
+                                  fontSize: 18,
+                                  letterSpacing: 0,
+                                  fontWeight: FontWeight.w500,
+                                ),
                       ),
                     ),
                   ],

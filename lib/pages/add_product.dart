@@ -9,11 +9,13 @@ const List<String> list = <String>['One', 'Two', 'Three', 'Four'];
 class AddProduct extends StatefulWidget {
   final String id;
   final String token;
+  final String role;
 
   const AddProduct({
     super.key,
     required this.id,
     required this.token,
+    required this.role,
   });
 
   @override
@@ -36,6 +38,10 @@ class _AddProductWidgetState extends State<AddProduct> {
   final descriptionController = TextEditingController();
   final descriptionFocusNode = FocusNode();
   FormFieldController<List<String>>? choiceChipsValueController;
+  final originalPriceController = TextEditingController();
+  final originalPriceFocusNode = FocusNode();
+  final percentDiscountController = TextEditingController();
+  final percentDiscountFocusNode = FocusNode();
 
   DateTime _dateOfBirth = DateTime(1900);
 
@@ -210,6 +216,205 @@ class _AddProductWidgetState extends State<AddProduct> {
                                       ),
                                   cursorColor: const Color(0xFF6F61EF),
                                 ),
+                                Container(
+                                  child: () {
+                                    if (widget.role != 'Customer') {
+                                      return Column(
+                                        children: [
+                                          TextFormField(
+                                            controller: originalPriceController,
+                                            focusNode: originalPriceFocusNode,
+                                            autofocus: true,
+                                            textCapitalization:
+                                                TextCapitalization.words,
+                                            obscureText: false,
+                                            decoration: InputDecoration(
+                                              labelText: 'Name',
+                                              labelStyle: FlutterFlowTheme.of(
+                                                      context)
+                                                  .headlineMedium
+                                                  .override(
+                                                    fontFamily: 'Outfit',
+                                                    color:
+                                                        const Color(0xFF606A85),
+                                                    fontSize: 24,
+                                                    fontWeight: FontWeight.w500,
+                                                  ),
+                                              hintStyle: FlutterFlowTheme.of(
+                                                      context)
+                                                  .labelMedium
+                                                  .override(
+                                                    fontFamily: 'Outfit',
+                                                    color:
+                                                        const Color(0xFF606A85),
+                                                    fontSize: 14,
+                                                    fontWeight: FontWeight.w500,
+                                                  ),
+                                              errorStyle: FlutterFlowTheme.of(
+                                                      context)
+                                                  .bodyMedium
+                                                  .override(
+                                                    fontFamily: 'Figtree',
+                                                    color:
+                                                        const Color(0xFFFF5963),
+                                                    fontSize: 12,
+                                                    fontWeight: FontWeight.w600,
+                                                  ),
+                                              enabledBorder: OutlineInputBorder(
+                                                borderSide: const BorderSide(
+                                                  color: Color(0xFFE5E7EB),
+                                                  width: 2,
+                                                ),
+                                                borderRadius:
+                                                    BorderRadius.circular(12),
+                                              ),
+                                              focusedBorder: OutlineInputBorder(
+                                                borderSide: const BorderSide(
+                                                  color: Color(0xFF6F61EF),
+                                                  width: 2,
+                                                ),
+                                                borderRadius:
+                                                    BorderRadius.circular(12),
+                                              ),
+                                              errorBorder: OutlineInputBorder(
+                                                borderSide: const BorderSide(
+                                                  color: Color(0xFFFF5963),
+                                                  width: 2,
+                                                ),
+                                                borderRadius:
+                                                    BorderRadius.circular(12),
+                                              ),
+                                              focusedErrorBorder:
+                                                  OutlineInputBorder(
+                                                borderSide: const BorderSide(
+                                                  color: Color(0xFFFF5963),
+                                                  width: 2,
+                                                ),
+                                                borderRadius:
+                                                    BorderRadius.circular(12),
+                                              ),
+                                              filled: true,
+                                              fillColor: (fullNameFocusNode
+                                                          ?.hasFocus ??
+                                                      false)
+                                                  ? const Color(0x4D9489F5)
+                                                  : Colors.white,
+                                              contentPadding:
+                                                  const EdgeInsetsDirectional
+                                                      .fromSTEB(16, 20, 16, 20),
+                                            ),
+                                            style: FlutterFlowTheme.of(context)
+                                                .headlineMedium
+                                                .override(
+                                                  fontFamily: 'Outfit',
+                                                  color:
+                                                      const Color(0xFF15161E),
+                                                  fontSize: 24,
+                                                  fontWeight: FontWeight.w500,
+                                                ),
+                                            cursorColor:
+                                                const Color(0xFF6F61EF),
+                                          ),
+                                          TextFormField(
+                                            controller: percentDiscountController,
+                                            focusNode: percentDiscountFocusNode,
+                                            autofocus: true,
+                                            textCapitalization:
+                                                TextCapitalization.words,
+                                            obscureText: false,
+                                            decoration: InputDecoration(
+                                              labelText: 'Name',
+                                              labelStyle: FlutterFlowTheme.of(
+                                                      context)
+                                                  .headlineMedium
+                                                  .override(
+                                                    fontFamily: 'Outfit',
+                                                    color:
+                                                        const Color(0xFF606A85),
+                                                    fontSize: 24,
+                                                    fontWeight: FontWeight.w500,
+                                                  ),
+                                              hintStyle: FlutterFlowTheme.of(
+                                                      context)
+                                                  .labelMedium
+                                                  .override(
+                                                    fontFamily: 'Outfit',
+                                                    color:
+                                                        const Color(0xFF606A85),
+                                                    fontSize: 14,
+                                                    fontWeight: FontWeight.w500,
+                                                  ),
+                                              errorStyle: FlutterFlowTheme.of(
+                                                      context)
+                                                  .bodyMedium
+                                                  .override(
+                                                    fontFamily: 'Figtree',
+                                                    color:
+                                                        const Color(0xFFFF5963),
+                                                    fontSize: 12,
+                                                    fontWeight: FontWeight.w600,
+                                                  ),
+                                              enabledBorder: OutlineInputBorder(
+                                                borderSide: const BorderSide(
+                                                  color: Color(0xFFE5E7EB),
+                                                  width: 2,
+                                                ),
+                                                borderRadius:
+                                                    BorderRadius.circular(12),
+                                              ),
+                                              focusedBorder: OutlineInputBorder(
+                                                borderSide: const BorderSide(
+                                                  color: Color(0xFF6F61EF),
+                                                  width: 2,
+                                                ),
+                                                borderRadius:
+                                                    BorderRadius.circular(12),
+                                              ),
+                                              errorBorder: OutlineInputBorder(
+                                                borderSide: const BorderSide(
+                                                  color: Color(0xFFFF5963),
+                                                  width: 2,
+                                                ),
+                                                borderRadius:
+                                                    BorderRadius.circular(12),
+                                              ),
+                                              focusedErrorBorder:
+                                                  OutlineInputBorder(
+                                                borderSide: const BorderSide(
+                                                  color: Color(0xFFFF5963),
+                                                  width: 2,
+                                                ),
+                                                borderRadius:
+                                                    BorderRadius.circular(12),
+                                              ),
+                                              filled: true,
+                                              fillColor: (fullNameFocusNode
+                                                          ?.hasFocus ??
+                                                      false)
+                                                  ? const Color(0x4D9489F5)
+                                                  : Colors.white,
+                                              contentPadding:
+                                                  const EdgeInsetsDirectional
+                                                      .fromSTEB(16, 20, 16, 20),
+                                            ),
+                                            style: FlutterFlowTheme.of(context)
+                                                .headlineMedium
+                                                .override(
+                                                  fontFamily: 'Outfit',
+                                                  color:
+                                                      const Color(0xFF15161E),
+                                                  fontSize: 24,
+                                                  fontWeight: FontWeight.w500,
+                                                ),
+                                            cursorColor:
+                                                const Color(0xFF6F61EF),
+                                          ),
+                                        ],
+                                      );
+                                    }
+                                  }(),
+                                ),
+
                                 /* TextFormField(
                                   controller: ageController,
                                   focusNode: ageFocusNode,
@@ -563,8 +768,7 @@ class _AddProductWidgetState extends State<AddProduct> {
                                   textCapitalization: TextCapitalization.words,
                                   obscureText: false,
                                   decoration: InputDecoration(
-                                    labelText:
-                                        'Description...',
+                                    labelText: 'Description...',
                                     labelStyle: FlutterFlowTheme.of(context)
                                         .labelLarge
                                         .override(
@@ -671,34 +875,69 @@ class _AddProductWidgetState extends State<AddProduct> {
                       print(descriptionController.text);
 
                       // Simulate a network request
-                      try {
-                        final response = await http.post(
-                            Uri.parse(
-                                'http://10.0.2.2:5157/api/v1/MonitoredProduct'),
-                            headers: {
-                              'Content-Type': 'application/json',
-                              'Accept': '*/*',
-                              'Authorization': 'Bearer ${widget.token}',
-                            },
-                            body: jsonEncode({
-                              'name': fullNameController.text,
-                              'description': descriptionController.text,
-                              'photo': phoneNumberController.text,
-                              'expirationDate': dateController.text,
-                              'categoriesIds': choiceChipsValue,
-                            }));
+                      if (widget.role == 'Customer') {
+                        try {
+                          final response = await http.post(
+                              Uri.parse(
+                                  'http://10.0.2.2:5157/api/v1/MonitoredProduct'),
+                              headers: {
+                                'Content-Type': 'application/json',
+                                'Accept': '*/*',
+                                'Authorization': 'Bearer ${widget.token}',
+                              },
+                              body: jsonEncode({
+                                'name': fullNameController.text,
+                                'description': descriptionController.text,
+                                'photo': phoneNumberController.text,
+                                'expirationDate': dateController.text,
+                                'categoriesIds': choiceChipsValue,
+                              }));
 
-                        print(response.body);
-                        print(response.statusCode);
-                        if (response.statusCode == 200) {
-                          print('Product added');
-                          Navigator.pop(context);
-                        } else {
-                          print('Failed to get products');
-                          return null;
+                          print(response.body);
+                          print(response.statusCode);
+                          if (response.statusCode == 200) {
+                            print('Product added');
+                            Navigator.pop(context);
+                          } else {
+                            print('Failed to get products');
+                            return null;
+                          }
+                        } catch (e) {
+                          print(e);
                         }
-                      } catch (e) {
-                        print(e);
+                      } else {
+                        try {
+                          final response = await http.post(
+                              Uri.parse(
+                                  'http://10.0.2.2:5157/api/v1/StoreProduct'),
+                              headers: {
+                                'Content-Type': 'application/json',
+                                'Accept': '*/*',
+                                'Authorization': 'Bearer ${widget.token}',
+                              },
+                              body: jsonEncode({
+                                'name': fullNameController.text,
+                                'description': descriptionController.text,
+                                'photo': phoneNumberController.text,
+                                'expirationDate': dateController.text,
+                                'categoriesIds': choiceChipsValue,
+                                // parse to int
+                                'originalPrice': int.parse(originalPriceController.text),
+                                'percentDiscount': int.parse(percentDiscountController.text),
+                              }));
+
+                          print(response.body);
+                          print(response.statusCode);
+                          if (response.statusCode == 200) {
+                            print('Product added');
+                            Navigator.pop(context);
+                          } else {
+                            print('Failed to get products');
+                            return null;
+                          }
+                        } catch (e) {
+                          print(e);
+                        }
                       }
                     },
                     text: 'Submit Form',
