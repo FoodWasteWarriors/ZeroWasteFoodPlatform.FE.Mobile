@@ -316,7 +316,8 @@ class _AddProductWidgetState extends State<AddProduct> {
                                                 const Color(0xFF6F61EF),
                                           ),
                                           TextFormField(
-                                            controller: percentDiscountController,
+                                            controller:
+                                                percentDiscountController,
                                             focusNode: percentDiscountFocusNode,
                                             autofocus: true,
                                             textCapitalization:
@@ -705,9 +706,24 @@ class _AddProductWidgetState extends State<AddProduct> {
                                 ),
                                 FlutterFlowChoiceChips(
                                   options: const [
-                                    ChipData('Meats'),
-                                    ChipData('Vegetables'),
-                                    ChipData('Fruits'),
+                                    ChipData('Diary'),
+                                    ChipData('Meat'),
+                                    ChipData('Fruit'),
+                                    ChipData('Vegetable'),
+                                    ChipData('Bakery'),
+                                    ChipData('Drink'),
+                                    ChipData('Snack'),
+                                    ChipData('Canned'),
+                                    ChipData('Frozen'),
+                                    ChipData('Grain'),
+                                    ChipData('Spice'),
+                                    ChipData('Sauce'),
+                                    ChipData('Oil'),
+                                    ChipData('Egg'),
+                                    ChipData('Dessert'),
+                                    ChipData('Seafood'),
+                                    ChipData('Pasta'),
+                                    ChipData('Cereal'),
                                   ],
                                   onChanged: (val) => setState(
                                     () {
@@ -874,6 +890,11 @@ class _AddProductWidgetState extends State<AddProduct> {
                       print(dateController.text);
                       print(descriptionController.text);
 
+                      /* DateTime parseDate = new DateFormat("yyyy-MM-dd")
+                          .parse(dateController.text);
+                      var inputDate = DateTime.parse(parseDate.toString());
+                      var outputFormat = DateFormat("2024-05-07T19:48:35.471Z");
+                      var outputDate = outputFormat.format(inputDate); */
                       // Simulate a network request
                       if (widget.role == 'Customer') {
                         try {
@@ -922,8 +943,10 @@ class _AddProductWidgetState extends State<AddProduct> {
                                 'expirationDate': dateController.text,
                                 'categoriesIds': choiceChipsValue,
                                 // parse to int
-                                'originalPrice': int.parse(originalPriceController.text),
-                                'percentDiscount': int.parse(percentDiscountController.text),
+                                'originalPrice':
+                                    int.parse(originalPriceController.text),
+                                'percentDiscount':
+                                    int.parse(percentDiscountController.text),
                               }));
 
                           print(response.body);

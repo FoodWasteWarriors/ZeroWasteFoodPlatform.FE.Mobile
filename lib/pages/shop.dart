@@ -96,7 +96,7 @@ class _ShopState extends State<Shop> {
         try {
           final response = await http.get(
               Uri.parse(
-                  'http://10.0.2.2:5157/api/v1/StoreProduct?page=1&pageSize=10'),
+                  'http://10.0.2.2:5157/api/v1/StoreProduct?page=1&pageSize=100'),
               headers: {
                 'Content-Type': 'application/json',
                 'Accept': '*/*',
@@ -114,6 +114,15 @@ class _ShopState extends State<Shop> {
           List<StoreProductModel> tempProducts = [];
 
           for (var i = 0; i < data.length; i++) {
+            final categories = data[i]['categories'] as List<dynamic>;
+            String description;
+
+            if (categories.length > 0) {
+              description = categories[0]['name'];
+            } else {
+              description = "";
+            }
+
             tempProducts.add(StoreProductModel(
                 originalPrice: data[i]['originalPrice'],
                 percentDiscount: data[i]['percentDiscount'],
@@ -123,7 +132,7 @@ class _ShopState extends State<Shop> {
                 description: data[i]['description'],
                 photo: data[i]['photo'],
                 expirationDate: data[i]['expirationDate'],
-                categories: data[i]['categories']));
+                categories: description));
           }
 
           setState(() {
@@ -138,12 +147,20 @@ class _ShopState extends State<Shop> {
                 'Accept': '*/*',
                 'Authorization': 'Bearer ${user.user.token}',
               });
-          final body2 = jsonDecode(response.body) as Map<String, dynamic>;
-          final data2 = body['data'] as List<dynamic>;
+          final body2 = jsonDecode(response2.body) as Map<String, dynamic>;
+          final data2 = body2['data'] as List<dynamic>;
 
           var leastExpirationDate = DateTime.now().add(const Duration(days: 3));
 
           for (var i = 0; i < data2.length; i++) {
+            final categories = data2[i]['categories'] as List<dynamic>;
+            String description;
+
+            if (categories.length > 0) {
+              description = categories[0]['name'];
+            } else {
+              description = "";
+            }
             var expirationDate = DateTime.parse(data2[i]['expirationDate']);
             if (expirationDate.isBefore(leastExpirationDate)) {
               notificationProducts.add(ProductInfoModel(
@@ -152,7 +169,7 @@ class _ShopState extends State<Shop> {
                   description: data2[i]['description'],
                   photo: data2[i]['photo'],
                   expirationDate: data2[i]['expirationDate'],
-                  categories: data2[i]['categories']));
+                  categories: description));
             }
           }
         } catch (e) {
@@ -182,6 +199,14 @@ class _ShopState extends State<Shop> {
           List<StoreProductModel> tempProducts = [];
 
           for (var i = 0; i < data.length; i++) {
+            final categories = data[i]['categories'] as List<dynamic>;
+            String description;
+
+            if (categories.length > 0) {
+              description = categories[0]['name'];
+            } else {
+              description = "";
+            }
             tempProducts.add(StoreProductModel(
                 originalPrice: data[i]['originalPrice'],
                 percentDiscount: data[i]['percentDiscount'],
@@ -191,7 +216,7 @@ class _ShopState extends State<Shop> {
                 description: data[i]['description'],
                 photo: data[i]['photo'],
                 expirationDate: data[i]['expirationDate'],
-                categories: data[i]['categories']));
+                categories: description));
           }
 
           setState(() {
@@ -440,6 +465,15 @@ class _ShopState extends State<Shop> {
                                 List<StoreProductModel> tempProducts = [];
 
                                 for (var i = 0; i < data.length; i++) {
+                                  final categories =
+                                      data[i]['categories'] as List<dynamic>;
+                                  String description;
+
+                                  if (categories.length > 0) {
+                                    description = categories[0]['name'];
+                                  } else {
+                                    description = "";
+                                  }
                                   tempProducts.add(StoreProductModel(
                                       originalPrice: data[i]['originalPrice'],
                                       percentDiscount: data[i]
@@ -450,7 +484,7 @@ class _ShopState extends State<Shop> {
                                       description: data[i]['description'],
                                       photo: data[i]['photo'],
                                       expirationDate: data[i]['expirationDate'],
-                                      categories: data[i]['categories']));
+                                      categories: description));
                                 }
 
                                 setState(() {
@@ -487,6 +521,15 @@ class _ShopState extends State<Shop> {
                                 List<StoreProductModel> tempProducts = [];
 
                                 for (var i = 0; i < data.length; i++) {
+                                  final categories =
+                                      data[i]['categories'] as List<dynamic>;
+                                  String description;
+
+                                  if (categories.length > 0) {
+                                    description = categories[0]['name'];
+                                  } else {
+                                    description = "";
+                                  }
                                   tempProducts.add(StoreProductModel(
                                       originalPrice: data[i]['originalPrice'],
                                       percentDiscount: data[i]
@@ -497,7 +540,7 @@ class _ShopState extends State<Shop> {
                                       description: data[i]['description'],
                                       photo: data[i]['photo'],
                                       expirationDate: data[i]['expirationDate'],
-                                      categories: data[i]['categories']));
+                                      categories: description));
                                 }
 
                                 setState(() {

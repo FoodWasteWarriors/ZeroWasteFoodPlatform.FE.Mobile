@@ -15,7 +15,7 @@ class ProductCard extends StatelessWidget {
   final String location;
   final int percentDiscount;
   final String expirationDate;
-  final List<dynamic> categories;
+  final String categories;
 
   const ProductCard({
     Key? key,
@@ -136,7 +136,7 @@ class ProductCard extends StatelessWidget {
                     ],
                   ),
                 ),
-                Row(
+                Column(
                   children: [
                     Padding(
                       padding: const EdgeInsetsDirectional.fromSTEB(0, 8, 0, 0),
@@ -150,11 +150,10 @@ class ProductCard extends StatelessWidget {
                             const EdgeInsetsDirectional.fromSTEB(0, 8, 0, 0),
                         child: () {
                           if (categories.isNotEmpty) {
-                            print("=====================================");
-                            print(categories[0]);
+                            
                             return Text(
-                              ' - ${categories[0]}',
-                              style: Theme.of(context).textTheme.headline6,
+                              categories,
+                              style: Theme.of(context).textTheme.labelSmall
                             );
                           }
                         }()),

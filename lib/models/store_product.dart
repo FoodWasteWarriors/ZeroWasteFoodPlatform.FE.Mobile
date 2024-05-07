@@ -7,7 +7,7 @@ class StoreProductModel {
   final String description;
   final String photo;
   final String expirationDate;
-  final List<dynamic> categories;
+  final String categories;
 
   StoreProductModel(
       {required this.originalPrice,

@@ -44,6 +44,8 @@ class _ShoppingListState extends State<ShoppingList> {
             print(data[0]['expirationDate']);
             print(data[0]['categories']);
 
+            
+
             for (var i = 0; i < data.length; i++) {
               products.add(StoreProductModel(
                   originalPrice: data[i]['originalPrice'],
