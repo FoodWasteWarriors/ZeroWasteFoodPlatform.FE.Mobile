@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
 import 'package:food_waste_2/models/product_info.dart';
+import 'package:food_waste_2/models/report.dart';
 import 'package:food_waste_2/models/store_product.dart';
 import 'package:food_waste_2/pages/add_product.dart';
 import 'package:food_waste_2/pages/list_monitored_products.dart';
@@ -8,6 +9,7 @@ import 'package:food_waste_2/pages/list_products.dart';
 import 'package:food_waste_2/providers/user_provider.dart';
 import 'package:food_waste_2/services/product.dart';
 import 'package:food_waste_2/widgets/recent_product_card.dart';
+import 'package:food_waste_2/widgets/report_card.dart';
 import 'package:provider/provider.dart';
 import 'dart:ui';
 import '../services/user_service.dart';
@@ -32,6 +34,7 @@ class _ShopState extends State<Shop> {
   String barcodeValue = "";
   List<StoreProductModel> products = [];
   bool isMounted = false;
+  List<ReportModel> reports = [];
 
   // text controller
   final TextEditingController textController = TextEditingController();
@@ -52,6 +55,43 @@ class _ShopState extends State<Shop> {
     () async {
       if (isMounted) return;
       isMounted = true;
+      if (user.user.role == "Admin") {
+        try {
+          final response2 = await http.get(
+              Uri.parse(
+                  'http://10.0.2.2:5157/api/v1/Report?page=1&pageSize=10'),
+              headers: {
+                'Content-Type': 'application/json',
+                'Accept': '*/*',
+                'Authorization': 'Bearer ${user.user.token}',
+              });
+          final body2 = jsonDecode(response2.body) as Map<String, dynamic>;
+          final data = body2['data'] as List<dynamic>;
+          print(data);
+
+          List<ReportModel> tempReports = [];
+
+          for (var i = 0; i < data.length; i++) {
+            tempReports.add(ReportModel(
+                id: data[i]['id'],
+                reportName: data[i]['reportName'],
+                endDate: data[i]['endDate'],
+                location: data[i]['location'],
+                manufacturer: data[i]['manufacturer'],
+                productName: data[i]['productName'],
+                soldAmount: data[i]['soldAmount'],
+                startDate: data[i]['startDate'],
+                suppliedAmount: data[i]['suppliedAmount'],
+                content: data[i]['content']));
+          }
+
+          setState(() {
+            reports = tempReports.toList();
+          });
+        } catch (e) {
+          print(e);
+        }
+      }
       if (user.user.role == "Customer") {
         try {
           final response = await http.get(
@@ -136,6 +176,8 @@ class _ShopState extends State<Shop> {
           print(data[0]['photo']);
           print(data[0]['expirationDate']);
           print(data[0]['categories']);
+
+          print("categories: ${data[0]['categories']}");
 
           List<StoreProductModel> tempProducts = [];
 
@@ -245,7 +287,7 @@ class _ShopState extends State<Shop> {
                                 child: ClipRRect(
                                   borderRadius: BorderRadius.circular(50),
                                   child: Image.network(
-                                    'https://picsum.photos/seed/626/600',
+                                    'https://images.unsplash.com/photo-1514924013411-cbf25faa35bb?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1380&q=80',
                                     width: 300,
                                     height: 200,
                                     fit: BoxFit.cover,
@@ -256,7 +298,7 @@ class _ShopState extends State<Shop> {
                           ),
                           Expanded(
                             child: Text(
-                              'Welcome, ${snapshot.data!.username}!',
+                              'Welcome, ${user.user.username}',
                               style:
                                   FlutterFlowTheme.of(context).headlineMedium,
                             ),
@@ -292,7 +334,8 @@ class _ShopState extends State<Shop> {
                                     Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                        builder: (context) => ListMonitoredProducts(
+                                        builder: (context) =>
+                                            ListMonitoredProducts(
                                           key: const ValueKey<String>(
                                               'AddProduct'),
                                           products: notificationProducts,
@@ -331,6 +374,46 @@ class _ShopState extends State<Shop> {
                             // print notification products with iteration
                             for (var product in notificationProducts) {
                               print('Notification Product: ${product.name}');
+                            }
+
+                            if (user.user.role == "Admin") {
+                              try {
+                                final response2 = await http.get(
+                                    Uri.parse(
+                                        'http://10.0.2.2:5157/api/v1/Report?page=1&pageSize=10&ReportNameQuery=$value'),
+                                    headers: {
+                                      'Content-Type': 'application/json',
+                                      'Accept': '*/*',
+                                      'Authorization':
+                                          'Bearer ${user.user.token}',
+                                    });
+                                final body2 = jsonDecode(response2.body)
+                                    as Map<String, dynamic>;
+                                final data = body2['data'] as List<dynamic>;
+                                print(data);
+
+                                List<ReportModel> tempReports = [];
+
+                                for (var i = 0; i < data.length; i++) {
+                                  tempReports.add(ReportModel(
+                                      id: data[i]['id'],
+                                      reportName: data[i]['reportName'],
+                                      endDate: data[i]['endDate'],
+                                      location: data[i]['location'],
+                                      manufacturer: data[i]['manufacturer'],
+                                      productName: data[i]['productName'],
+                                      soldAmount: data[i]['soldAmount'],
+                                      startDate: data[i]['startDate'],
+                                      suppliedAmount: data[i]['suppliedAmount'],
+                                      content: data[i]['content']));
+                                }
+
+                                setState(() {
+                                  reports = tempReports.toList();
+                                });
+                              } catch (e) {
+                                print(e);
+                              }
                             }
 
                             if (user.user.role == "Customer") {
@@ -502,9 +585,15 @@ class _ShopState extends State<Shop> {
                                           style: FlutterFlowTheme.of(context)
                                               .labelMedium,
                                         );
-                                      } else {
+                                      } else if (user.user.role == "Business") {
                                         return Text(
                                           'My Products',
+                                          style: FlutterFlowTheme.of(context)
+                                              .labelMedium,
+                                        );
+                                      } else {
+                                        return Text(
+                                          'Reports',
                                           style: FlutterFlowTheme.of(context)
                                               .labelMedium,
                                         );
@@ -515,20 +604,61 @@ class _ShopState extends State<Shop> {
                                   primary: false,
                                   shrinkWrap: true,
                                   scrollDirection: Axis.vertical,
-                                  children: [
-                                    for (var product in products)
-                                      ProductCard(
-                                        id: product.id,
-                                        imageUrl: product.photo,
-                                        propertyName: product.name,
-                                        pricePerNight:
-                                            product.originalPrice.toString(),
-                                        location: product.categories.toString(),
-                                        percentDiscount:
-                                            product.percentDiscount,
-                                        expirationDate: product.expirationDate,
-                                      ),
-                                  ].divide(const SizedBox(height: 12)),
+                                  children: () {
+                                    if (user.user.role == "Customer") {
+                                      return [
+                                        for (var product in products)
+                                          ProductCard(
+                                            id: product.id,
+                                            imageUrl: product.photo,
+                                            propertyName: product.name,
+                                            pricePerNight: product.originalPrice
+                                                .toString(),
+                                            location:
+                                                product.categories.toString(),
+                                            percentDiscount:
+                                                product.percentDiscount,
+                                            expirationDate:
+                                                product.expirationDate,
+                                            categories: product.categories,
+                                          ),
+                                      ].divide(const SizedBox(height: 12));
+                                    } else if (user.user.role == "Business") {
+                                      return [
+                                        for (var product in products)
+                                          ProductCard(
+                                            id: product.id,
+                                            imageUrl: product.photo,
+                                            propertyName: product.name,
+                                            pricePerNight: product.originalPrice
+                                                .toString(),
+                                            location:
+                                                product.categories.toString(),
+                                            percentDiscount:
+                                                product.percentDiscount,
+                                            expirationDate:
+                                                product.expirationDate,
+                                            categories: product.categories,
+                                          ),
+                                      ].divide(const SizedBox(height: 12));
+                                    } else {
+                                      return [
+                                        for (var report in reports)
+                                          ReportCard(
+                                            reportName: report.reportName,
+                                            endDate: report.endDate,
+                                            location: report.location,
+                                            manufacturer: report.manufacturer,
+                                            productName: report.productName,
+                                            soldAmount: report.soldAmount,
+                                            startDate: report.startDate,
+                                            suppliedAmount:
+                                                report.suppliedAmount,
+                                            content: report.content,
+                                          )
+                                      ].divide(const SizedBox(height: 12));
+                                    }
+                                  }(),
                                 ),
                               ],
                             ),

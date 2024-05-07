@@ -15,6 +15,7 @@ class ProductCard extends StatelessWidget {
   final String location;
   final int percentDiscount;
   final String expirationDate;
+  final List<dynamic> categories;
 
   const ProductCard({
     Key? key,
@@ -25,6 +26,7 @@ class ProductCard extends StatelessWidget {
     required this.location,
     required this.percentDiscount,
     required this.expirationDate,
+    required this.categories,
   }) : super(key: key);
 
   @override
@@ -134,12 +136,29 @@ class ProductCard extends StatelessWidget {
                     ],
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsetsDirectional.fromSTEB(0, 8, 0, 0),
-                  child: Text(
-                    propertyName,
-                    style: Theme.of(context).textTheme.headline6,
-                  ),
+                Row(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsetsDirectional.fromSTEB(0, 8, 0, 0),
+                      child: Text(
+                        propertyName,
+                        style: Theme.of(context).textTheme.headline6,
+                      ),
+                    ),
+                    Padding(
+                        padding:
+                            const EdgeInsetsDirectional.fromSTEB(0, 8, 0, 0),
+                        child: () {
+                          if (categories.isNotEmpty) {
+                            print("=====================================");
+                            print(categories[0]);
+                            return Text(
+                              ' - ${categories[0]}',
+                              style: Theme.of(context).textTheme.headline6,
+                            );
+                          }
+                        }()),
+                  ],
                 ),
                 Row(
                   mainAxisSize: MainAxisSize.max,
@@ -171,8 +190,7 @@ class ProductCard extends StatelessWidget {
                       padding: const EdgeInsetsDirectional.fromSTEB(0, 4, 0, 8),
                       child: () {
                         DateTime parseDate =
-                            new DateFormat("yyyy-MM-dd")
-                                .parse(expirationDate);
+                            new DateFormat("yyyy-MM-dd").parse(expirationDate);
                         var inputDate = DateTime.parse(parseDate.toString());
                         var outputFormat = DateFormat('MM/dd/yyyy');
                         var outputDate = outputFormat.format(inputDate);

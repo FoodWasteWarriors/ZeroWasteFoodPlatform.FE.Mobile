@@ -267,10 +267,10 @@ class _ProductDetailsState extends State<ProductDetails> {
                         const EdgeInsetsDirectional.fromSTEB(24, 16, 24, 0),
                     child: () {
                       DateTime parseDate =
-                          new DateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS")
+                          new DateFormat("yyyy-MM-dd")
                               .parse(widget.expirationDate);
                       var inputDate = DateTime.parse(parseDate.toString());
-                      var outputFormat = DateFormat('MM/dd/yyyy hh:mm a');
+                      var outputFormat = DateFormat('MM/dd/yyyy');
                       var outputDate = outputFormat.format(inputDate);
                       return Row(
                         mainAxisSize: MainAxisSize.max,

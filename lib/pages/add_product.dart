@@ -229,7 +229,7 @@ class _AddProductWidgetState extends State<AddProduct> {
                                                 TextCapitalization.words,
                                             obscureText: false,
                                             decoration: InputDecoration(
-                                              labelText: 'Name',
+                                              labelText: 'Original Price',
                                               labelStyle: FlutterFlowTheme.of(
                                                       context)
                                                   .headlineMedium
@@ -323,7 +323,7 @@ class _AddProductWidgetState extends State<AddProduct> {
                                                 TextCapitalization.words,
                                             obscureText: false,
                                             decoration: InputDecoration(
-                                              labelText: 'Name',
+                                              labelText: 'Percent Discount',
                                               labelStyle: FlutterFlowTheme.of(
                                                       context)
                                                   .headlineMedium

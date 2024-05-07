@@ -92,6 +92,7 @@ class _ShoppingListState extends State<ShoppingList> {
                   location: product.categories.toString(),
                   percentDiscount: product.percentDiscount,
                   expirationDate: product.expirationDate,
+                  categories: product.categories,
                 ),
             ].divide(const SizedBox(height: 12)),
           );
