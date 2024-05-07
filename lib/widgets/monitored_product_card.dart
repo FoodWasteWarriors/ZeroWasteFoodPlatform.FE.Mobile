@@ -5,25 +5,22 @@ import 'package:flutterflow_ui/flutterflow_ui.dart';
 import 'package:food_waste_2/pages/add_product.dart';
 import 'package:food_waste_2/pages/product_details.dart';
 import 'package:food_waste_2/providers/user_provider.dart';
+import 'package:food_waste_2/widgets/monitored_product_details.dart';
 import 'package:provider/provider.dart';
 
-class ProductCard extends StatelessWidget {
+class MonitoredProductCard extends StatelessWidget {
   final String id;
   final String imageUrl;
   final String propertyName;
-  final String pricePerNight;
   final String location;
-  final int percentDiscount;
   final String expirationDate;
 
-  const ProductCard({
+  const MonitoredProductCard({
     Key? key,
     required this.id,
     required this.imageUrl,
     required this.propertyName,
-    required this.pricePerNight,
     required this.location,
-    required this.percentDiscount,
     required this.expirationDate,
   }) : super(key: key);
 
@@ -37,14 +34,12 @@ class ProductCard extends StatelessWidget {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => ProductDetails(
+              builder: (context) => MonitoredProductDetails(
                 key: const ValueKey<String>('AddProduct'),
                 id: id,
                 imageUrl: imageUrl,
                 propertyName: propertyName,
-                pricePerNight: pricePerNight,
                 location: location,
-                percentDiscount: percentDiscount,
                 token: user.user.token,
                 expirationDate: expirationDate,
               ),
@@ -87,50 +82,6 @@ class ProductCard extends StatelessWidget {
                           fit: BoxFit.cover,
                         ),
                       ),
-                      Align(
-                        alignment: const AlignmentDirectional(1, -1),
-                        child: Padding(
-                          padding:
-                              const EdgeInsetsDirectional.fromSTEB(0, 8, 8, 0),
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(12),
-                            child: BackdropFilter(
-                              filter: ImageFilter.blur(
-                                sigmaX: 5,
-                                sigmaY: 2,
-                              ),
-                              child: Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Container(
-                                    height: 32,
-                                    decoration: BoxDecoration(
-                                      color: Colors.white,
-                                      borderRadius: BorderRadius.circular(12),
-                                      border: Border.all(
-                                        color: Theme.of(context).primaryColor,
-                                        width: 2,
-                                      ),
-                                    ),
-                                    alignment: const AlignmentDirectional(0, 0),
-                                    child: Padding(
-                                      padding:
-                                          const EdgeInsetsDirectional.fromSTEB(
-                                              8, 0, 8, 0),
-                                      child: Text(
-                                        '$percentDiscount% OFF',
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .bodyText1,
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
                     ],
                   ),
                 ),
@@ -147,32 +98,9 @@ class ProductCard extends StatelessWidget {
                   children: [
                     Padding(
                       padding: const EdgeInsetsDirectional.fromSTEB(0, 4, 0, 8),
-                      child: RichText(
-                        text: TextSpan(
-                          children: [
-                            TextSpan(
-                              text: '\$$pricePerNight',
-                              style: TextStyle(
-                                color: Theme.of(context).primaryColor,
-                                decoration: TextDecoration.lineThrough,
-                              ),
-                            ),
-                            TextSpan(
-                              text:
-                                  ' \$${(double.parse(pricePerNight) * (1 - percentDiscount / 100)).toStringAsFixed(2)}',
-                              style: Theme.of(context).textTheme.bodyText2,
-                            ),
-                          ],
-                          style: Theme.of(context).textTheme.bodyText2,
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsetsDirectional.fromSTEB(0, 4, 0, 8),
                       child: () {
                         DateTime parseDate =
-                            new DateFormat("yyyy-MM-dd")
-                                .parse(expirationDate);
+                            new DateFormat("yyyy-MM-dd").parse(expirationDate);
                         var inputDate = DateTime.parse(parseDate.toString());
                         var outputFormat = DateFormat('MM/dd/yyyy');
                         var outputDate = outputFormat.format(inputDate);

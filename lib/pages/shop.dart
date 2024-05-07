@@ -3,6 +3,7 @@ import 'package:flutterflow_ui/flutterflow_ui.dart';
 import 'package:food_waste_2/models/product_info.dart';
 import 'package:food_waste_2/models/store_product.dart';
 import 'package:food_waste_2/pages/add_product.dart';
+import 'package:food_waste_2/pages/list_monitored_products.dart';
 import 'package:food_waste_2/pages/list_products.dart';
 import 'package:food_waste_2/providers/user_provider.dart';
 import 'package:food_waste_2/services/product.dart';
@@ -38,7 +39,7 @@ class _ShopState extends State<Shop> {
   // focus node
   final FocusNode textFocusNode = FocusNode();
 
-  List<StoreProductModel> notificationProducts = [];
+  List<ProductInfoModel> notificationProducts = [];
 
   @override
   void initState() {
@@ -89,21 +90,29 @@ class _ShopState extends State<Shop> {
             products = tempProducts.toList();
           });
 
+          final response2 = await http.get(
+              Uri.parse(
+                  'http://10.0.2.2:5157/api/v1/MonitoredProduct?page=1&pageSize=10'),
+              headers: {
+                'Content-Type': 'application/json',
+                'Accept': '*/*',
+                'Authorization': 'Bearer ${user.user.token}',
+              });
+          final body2 = jsonDecode(response.body) as Map<String, dynamic>;
+          final data2 = body['data'] as List<dynamic>;
+
           var leastExpirationDate = DateTime.now().add(const Duration(days: 3));
 
-          for (var i = 0; i < data.length; i++) {
-            var expirationDate = DateTime.parse(data[i]['expirationDate']);
+          for (var i = 0; i < data2.length; i++) {
+            var expirationDate = DateTime.parse(data2[i]['expirationDate']);
             if (expirationDate.isBefore(leastExpirationDate)) {
-              notificationProducts.add(StoreProductModel(
-                  originalPrice: data[i]['originalPrice'],
-                  percentDiscount: data[i]['percentDiscount'],
-                  business: data[i]['business'],
-                  id: data[i]['id'],
-                  name: data[i]['name'],
-                  description: data[i]['description'],
-                  photo: data[i]['photo'],
-                  expirationDate: data[i]['expirationDate'],
-                  categories: data[i]['categories']));
+              notificationProducts.add(ProductInfoModel(
+                  id: data2[i]['id'],
+                  name: data2[i]['name'],
+                  description: data2[i]['description'],
+                  photo: data2[i]['photo'],
+                  expirationDate: data2[i]['expirationDate'],
+                  categories: data2[i]['categories']));
             }
           }
         } catch (e) {
@@ -283,7 +292,7 @@ class _ShopState extends State<Shop> {
                                     Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                        builder: (context) => ListProducts(
+                                        builder: (context) => ListMonitoredProducts(
                                           key: const ValueKey<String>(
                                               'AddProduct'),
                                           products: notificationProducts,
