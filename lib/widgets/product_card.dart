@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
+import 'package:food_waste_2/models/category.dart';
 import 'package:food_waste_2/pages/add_product.dart';
 import 'package:food_waste_2/pages/product_details.dart';
 import 'package:food_waste_2/providers/user_provider.dart';
@@ -15,7 +16,7 @@ class ProductCard extends StatelessWidget {
   final String location;
   final int percentDiscount;
   final String expirationDate;
-  final String categories;
+  final List<CategoryModel> categories;
 
   const ProductCard({
     Key? key,
@@ -152,7 +153,7 @@ class ProductCard extends StatelessWidget {
                           if (categories.isNotEmpty) {
                             
                             return Text(
-                              categories,
+                              categories.join(', '),
                               style: Theme.of(context).textTheme.labelSmall
                             );
                           }

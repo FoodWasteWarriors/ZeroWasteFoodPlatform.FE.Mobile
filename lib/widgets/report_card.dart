@@ -31,7 +31,7 @@ class ReportCard extends StatelessWidget {
       child: Container(
         width: 220,
         // min content
-        height: 500,
+        //height: 500,
         decoration: BoxDecoration(
           color: Colors.white,
           boxShadow: const [

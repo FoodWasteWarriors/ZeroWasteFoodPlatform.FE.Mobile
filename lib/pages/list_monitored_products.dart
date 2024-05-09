@@ -20,7 +20,7 @@ class _ListMonitoredProductsState extends State<ListMonitoredProducts> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Notifications (about to expire)'),
+        title: const Text('Notifications'),
       ),
       body: ListView(
         padding: EdgeInsets.zero,
