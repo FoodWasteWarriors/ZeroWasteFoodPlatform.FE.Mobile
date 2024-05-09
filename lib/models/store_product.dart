@@ -9,7 +9,7 @@ class StoreProductModel {
   final String description;
   final String photo;
   final String expirationDate;
-  final List<CategoryModel> categories;
+  final List<String> categories;
 
   StoreProductModel(
       {required this.originalPrice,

@@ -16,7 +16,7 @@ class ProductCard extends StatelessWidget {
   final String location;
   final int percentDiscount;
   final String expirationDate;
-  final List<CategoryModel> categories;
+  final List<String> categories;
 
   const ProductCard({
     Key? key,

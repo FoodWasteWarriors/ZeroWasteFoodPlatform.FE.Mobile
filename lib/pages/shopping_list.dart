@@ -47,6 +47,12 @@ class _ShoppingListState extends State<ShoppingList> {
             
 
             for (var i = 0; i < data.length; i++) {
+              var categoriesData = data[i]['categories'] as List<dynamic>;
+              List<String> categoriesList = [];
+              for (var j = 0; j < categoriesData.length; j++) {
+                categoriesList.add(categoriesData[j]['name']);
+              }
+
               products.add(StoreProductModel(
                   originalPrice: data[i]['originalPrice'],
                   percentDiscount: data[i]['percentDiscount'],
@@ -56,7 +62,7 @@ class _ShoppingListState extends State<ShoppingList> {
                   description: data[i]['description'],
                   photo: data[i]['photo'],
                   expirationDate: data[i]['expirationDate'],
-                  categories: data[i]['categories']));
+                  categories: categoriesList));
             }
             print(response.statusCode);
             if (response.statusCode == 200) {

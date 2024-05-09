@@ -4,7 +4,7 @@ class ProductInfoModel {
   final String description;
   final String photo;
   final String expirationDate;
-  final String categories;
+  final List<String> categories;
 
   ProductInfoModel(
       {required this.id,

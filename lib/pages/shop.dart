@@ -115,8 +115,11 @@ class _ShopState extends State<Shop> {
           List<StoreProductModel> tempProducts = [];
 
           for (var i = 0; i < data.length; i++) {
-            final categories = data[i]['categories'] as List<CategoryModel>;
-            
+            var categoriesData = data[i]['categories'] as List<dynamic>;
+            List<String> categoriesList = [];
+            for (var j = 0; j < categoriesData.length; j++) {
+              categoriesList.add(categoriesData[j]['name']);
+            }
 
             tempProducts.add(StoreProductModel(
                 originalPrice: data[i]['originalPrice'],
@@ -127,7 +130,7 @@ class _ShopState extends State<Shop> {
                 description: data[i]['description'],
                 photo: data[i]['photo'],
                 expirationDate: data[i]['expirationDate'],
-                categories: categories));
+                categories: categoriesList));
           }
 
           setState(() {
@@ -150,13 +153,10 @@ class _ShopState extends State<Shop> {
           var leastExpirationDate = DateTime.now().add(const Duration(days: 3));
 
           for (var i = 0; i < data2.length; i++) {
-            final categories = data2[i]['categories'] as List<dynamic>;
-            String description;
-
-            if (categories.length > 0) {
-              description = categories[0]['name'];
-            } else {
-              description = "";
+            var categoriesData = data[i]['categories'] as List<dynamic>;
+            List<String> categoriesList = [];
+            for (var j = 0; j < categoriesData.length; j++) {
+              categoriesList.add(categoriesData[j]['name']);
             }
             var expirationDate = DateTime.parse(data2[i]['expirationDate']);
             if (expirationDate.isBefore(leastExpirationDate)) {
@@ -166,7 +166,7 @@ class _ShopState extends State<Shop> {
                   description: data2[i]['description'],
                   photo: data2[i]['photo'],
                   expirationDate: data2[i]['expirationDate'],
-                  categories: description));
+                  categories: categoriesList));
             }
           }
         } catch (e) {
@@ -197,8 +197,12 @@ class _ShopState extends State<Shop> {
           List<StoreProductModel> tempProducts = [];
 
           for (var i = 0; i < data.length; i++) {
-            final categories = data[i]['categories'] as List<CategoryModel>;
-            
+            var categoriesData = data[i]['categories'] as List<dynamic>;
+            List<String> categoriesList = [];
+            for (var j = 0; j < categoriesData.length; j++) {
+              categoriesList.add(categoriesData[j]['name']);
+            }
+
             tempProducts.add(StoreProductModel(
                 originalPrice: data[i]['originalPrice'],
                 percentDiscount: data[i]['percentDiscount'],
@@ -208,7 +212,7 @@ class _ShopState extends State<Shop> {
                 description: data[i]['description'],
                 photo: data[i]['photo'],
                 expirationDate: data[i]['expirationDate'],
-                categories: categories));
+                categories: categoriesList));
           }
 
           setState(() {
@@ -457,9 +461,16 @@ class _ShopState extends State<Shop> {
                                 List<StoreProductModel> tempProducts = [];
 
                                 for (var i = 0; i < data.length; i++) {
-                                  final categories =
-                                      data[i]['categories'] as List<CategoryModel>;
-                                  
+                                  var categoriesData =
+                                      data[i]['categories'] as List<dynamic>;
+                                  List<String> categoriesList = [];
+                                  for (var j = 0;
+                                      j < categoriesData.length;
+                                      j++) {
+                                    categoriesList
+                                        .add(categoriesData[j]['name']);
+                                  }
+
                                   tempProducts.add(StoreProductModel(
                                       originalPrice: data[i]['originalPrice'],
                                       percentDiscount: data[i]
@@ -470,7 +481,7 @@ class _ShopState extends State<Shop> {
                                       description: data[i]['description'],
                                       photo: data[i]['photo'],
                                       expirationDate: data[i]['expirationDate'],
-                                      categories: categories));
+                                      categories: categoriesList));
                                 }
 
                                 setState(() {
@@ -507,9 +518,16 @@ class _ShopState extends State<Shop> {
                                 List<StoreProductModel> tempProducts = [];
 
                                 for (var i = 0; i < data.length; i++) {
-                                  final categories =
-                                      data[i]['categories'] as List<CategoryModel>;
-                                  
+                                  var categoriesData =
+                                      data[i]['categories'] as List<dynamic>;
+                                  List<String> categoriesList = [];
+                                  for (var j = 0;
+                                      j < categoriesData.length;
+                                      j++) {
+                                    categoriesList
+                                        .add(categoriesData[j]['name']);
+                                  }
+
                                   tempProducts.add(StoreProductModel(
                                       originalPrice: data[i]['originalPrice'],
                                       percentDiscount: data[i]
@@ -520,7 +538,7 @@ class _ShopState extends State<Shop> {
                                       description: data[i]['description'],
                                       photo: data[i]['photo'],
                                       expirationDate: data[i]['expirationDate'],
-                                      categories: categories));
+                                      categories: categoriesList));
                                 }
 
                                 setState(() {
