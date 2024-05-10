@@ -266,9 +266,8 @@ class _ProductDetailsState extends State<ProductDetails> {
                     padding:
                         const EdgeInsetsDirectional.fromSTEB(24, 16, 24, 0),
                     child: () {
-                      DateTime parseDate =
-                          new DateFormat("yyyy-MM-dd")
-                              .parse(widget.expirationDate);
+                      DateTime parseDate = new DateFormat("yyyy-MM-dd")
+                          .parse(widget.expirationDate);
                       var inputDate = DateTime.parse(parseDate.toString());
                       var outputFormat = DateFormat('MM/dd/yyyy');
                       var outputDate = outputFormat.format(inputDate);
@@ -446,6 +445,13 @@ class _ProductDetailsState extends State<ProductDetails> {
                     print(response.statusCode);
                     if (response.statusCode == 200) {
                       print('Success');
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text(
+                            'Product added to shopping list!',
+                          ),
+                        ),
+                      );
                     } else {
                       print('Failed');
                     }

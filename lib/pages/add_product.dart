@@ -68,7 +68,7 @@ class _AddProductWidgetState extends State<AddProduct> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Patient Intake form',
+              'Product Adding Form',
               style: FlutterFlowTheme.of(context).headlineMedium.override(
                     fontFamily: 'Outfit',
                     color: const Color(0xFF15161E),
@@ -221,194 +221,200 @@ class _AddProductWidgetState extends State<AddProduct> {
                                     if (widget.role != 'Customer') {
                                       return Column(
                                         children: [
-                                          TextFormField(
-                                            controller: originalPriceController,
-                                            focusNode: originalPriceFocusNode,
-                                            autofocus: true,
-                                            textCapitalization:
-                                                TextCapitalization.words,
-                                            obscureText: false,
-                                            decoration: InputDecoration(
-                                              labelText: 'Original Price',
-                                              labelStyle: FlutterFlowTheme.of(
-                                                      context)
+                                          Padding(
+                                            padding: const EdgeInsets.fromLTRB(0, 12.0, 0, 12.0),
+                                            child: TextFormField(
+                                              controller: originalPriceController,
+                                              focusNode: originalPriceFocusNode,
+                                              autofocus: true,
+                                              textCapitalization:
+                                                  TextCapitalization.words,
+                                              obscureText: false,
+                                              decoration: InputDecoration(
+                                                labelText: 'Original Price',
+                                                labelStyle: FlutterFlowTheme.of(
+                                                        context)
+                                                    .headlineMedium
+                                                    .override(
+                                                      fontFamily: 'Outfit',
+                                                      color:
+                                                          const Color(0xFF606A85),
+                                                      fontSize: 24,
+                                                      fontWeight: FontWeight.w500,
+                                                    ),
+                                                hintStyle: FlutterFlowTheme.of(
+                                                        context)
+                                                    .labelMedium
+                                                    .override(
+                                                      fontFamily: 'Outfit',
+                                                      color:
+                                                          const Color(0xFF606A85),
+                                                      fontSize: 14,
+                                                      fontWeight: FontWeight.w500,
+                                                    ),
+                                                errorStyle: FlutterFlowTheme.of(
+                                                        context)
+                                                    .bodyMedium
+                                                    .override(
+                                                      fontFamily: 'Figtree',
+                                                      color:
+                                                          const Color(0xFFFF5963),
+                                                      fontSize: 12,
+                                                      fontWeight: FontWeight.w600,
+                                                    ),
+                                                enabledBorder: OutlineInputBorder(
+                                                  borderSide: const BorderSide(
+                                                    color: Color(0xFFE5E7EB),
+                                                    width: 2,
+                                                  ),
+                                                  borderRadius:
+                                                      BorderRadius.circular(12),
+                                                ),
+                                                focusedBorder: OutlineInputBorder(
+                                                  borderSide: const BorderSide(
+                                                    color: Color(0xFF6F61EF),
+                                                    width: 2,
+                                                  ),
+                                                  borderRadius:
+                                                      BorderRadius.circular(12),
+                                                ),
+                                                errorBorder: OutlineInputBorder(
+                                                  borderSide: const BorderSide(
+                                                    color: Color(0xFFFF5963),
+                                                    width: 2,
+                                                  ),
+                                                  borderRadius:
+                                                      BorderRadius.circular(12),
+                                                ),
+                                                focusedErrorBorder:
+                                                    OutlineInputBorder(
+                                                  borderSide: const BorderSide(
+                                                    color: Color(0xFFFF5963),
+                                                    width: 2,
+                                                  ),
+                                                  borderRadius:
+                                                      BorderRadius.circular(12),
+                                                ),
+                                                filled: true,
+                                                fillColor: (fullNameFocusNode
+                                                            ?.hasFocus ??
+                                                        false)
+                                                    ? const Color(0x4D9489F5)
+                                                    : Colors.white,
+                                                contentPadding:
+                                                    const EdgeInsetsDirectional
+                                                        .fromSTEB(16, 20, 16, 20),
+                                              ),
+                                              style: FlutterFlowTheme.of(context)
                                                   .headlineMedium
                                                   .override(
                                                     fontFamily: 'Outfit',
                                                     color:
-                                                        const Color(0xFF606A85),
+                                                        const Color(0xFF15161E),
                                                     fontSize: 24,
                                                     fontWeight: FontWeight.w500,
                                                   ),
-                                              hintStyle: FlutterFlowTheme.of(
-                                                      context)
-                                                  .labelMedium
-                                                  .override(
-                                                    fontFamily: 'Outfit',
-                                                    color:
-                                                        const Color(0xFF606A85),
-                                                    fontSize: 14,
-                                                    fontWeight: FontWeight.w500,
-                                                  ),
-                                              errorStyle: FlutterFlowTheme.of(
-                                                      context)
-                                                  .bodyMedium
-                                                  .override(
-                                                    fontFamily: 'Figtree',
-                                                    color:
-                                                        const Color(0xFFFF5963),
-                                                    fontSize: 12,
-                                                    fontWeight: FontWeight.w600,
-                                                  ),
-                                              enabledBorder: OutlineInputBorder(
-                                                borderSide: const BorderSide(
-                                                  color: Color(0xFFE5E7EB),
-                                                  width: 2,
-                                                ),
-                                                borderRadius:
-                                                    BorderRadius.circular(12),
-                                              ),
-                                              focusedBorder: OutlineInputBorder(
-                                                borderSide: const BorderSide(
-                                                  color: Color(0xFF6F61EF),
-                                                  width: 2,
-                                                ),
-                                                borderRadius:
-                                                    BorderRadius.circular(12),
-                                              ),
-                                              errorBorder: OutlineInputBorder(
-                                                borderSide: const BorderSide(
-                                                  color: Color(0xFFFF5963),
-                                                  width: 2,
-                                                ),
-                                                borderRadius:
-                                                    BorderRadius.circular(12),
-                                              ),
-                                              focusedErrorBorder:
-                                                  OutlineInputBorder(
-                                                borderSide: const BorderSide(
-                                                  color: Color(0xFFFF5963),
-                                                  width: 2,
-                                                ),
-                                                borderRadius:
-                                                    BorderRadius.circular(12),
-                                              ),
-                                              filled: true,
-                                              fillColor: (fullNameFocusNode
-                                                          ?.hasFocus ??
-                                                      false)
-                                                  ? const Color(0x4D9489F5)
-                                                  : Colors.white,
-                                              contentPadding:
-                                                  const EdgeInsetsDirectional
-                                                      .fromSTEB(16, 20, 16, 20),
+                                              cursorColor:
+                                                  const Color(0xFF6F61EF),
                                             ),
-                                            style: FlutterFlowTheme.of(context)
-                                                .headlineMedium
-                                                .override(
-                                                  fontFamily: 'Outfit',
-                                                  color:
-                                                      const Color(0xFF15161E),
-                                                  fontSize: 24,
-                                                  fontWeight: FontWeight.w500,
-                                                ),
-                                            cursorColor:
-                                                const Color(0xFF6F61EF),
                                           ),
-                                          TextFormField(
-                                            controller:
-                                                percentDiscountController,
-                                            focusNode: percentDiscountFocusNode,
-                                            autofocus: true,
-                                            textCapitalization:
-                                                TextCapitalization.words,
-                                            obscureText: false,
-                                            decoration: InputDecoration(
-                                              labelText: 'Percent Discount',
-                                              labelStyle: FlutterFlowTheme.of(
-                                                      context)
+                                          Padding(
+                                            padding: const EdgeInsets.fromLTRB(0, 12.0, 0, 12.0),
+                                            child: TextFormField(
+                                              controller:
+                                                  percentDiscountController,
+                                              focusNode: percentDiscountFocusNode,
+                                              autofocus: true,
+                                              textCapitalization:
+                                                  TextCapitalization.words,
+                                              obscureText: false,
+                                              decoration: InputDecoration(
+                                                labelText: 'Percent Discount',
+                                                labelStyle: FlutterFlowTheme.of(
+                                                        context)
+                                                    .headlineMedium
+                                                    .override(
+                                                      fontFamily: 'Outfit',
+                                                      color:
+                                                          const Color(0xFF606A85),
+                                                      fontSize: 24,
+                                                      fontWeight: FontWeight.w500,
+                                                    ),
+                                                hintStyle: FlutterFlowTheme.of(
+                                                        context)
+                                                    .labelMedium
+                                                    .override(
+                                                      fontFamily: 'Outfit',
+                                                      color:
+                                                          const Color(0xFF606A85),
+                                                      fontSize: 14,
+                                                      fontWeight: FontWeight.w500,
+                                                    ),
+                                                errorStyle: FlutterFlowTheme.of(
+                                                        context)
+                                                    .bodyMedium
+                                                    .override(
+                                                      fontFamily: 'Figtree',
+                                                      color:
+                                                          const Color(0xFFFF5963),
+                                                      fontSize: 12,
+                                                      fontWeight: FontWeight.w600,
+                                                    ),
+                                                enabledBorder: OutlineInputBorder(
+                                                  borderSide: const BorderSide(
+                                                    color: Color(0xFFE5E7EB),
+                                                    width: 2,
+                                                  ),
+                                                  borderRadius:
+                                                      BorderRadius.circular(12),
+                                                ),
+                                                focusedBorder: OutlineInputBorder(
+                                                  borderSide: const BorderSide(
+                                                    color: Color(0xFF6F61EF),
+                                                    width: 2,
+                                                  ),
+                                                  borderRadius:
+                                                      BorderRadius.circular(12),
+                                                ),
+                                                errorBorder: OutlineInputBorder(
+                                                  borderSide: const BorderSide(
+                                                    color: Color(0xFFFF5963),
+                                                    width: 2,
+                                                  ),
+                                                  borderRadius:
+                                                      BorderRadius.circular(12),
+                                                ),
+                                                focusedErrorBorder:
+                                                    OutlineInputBorder(
+                                                  borderSide: const BorderSide(
+                                                    color: Color(0xFFFF5963),
+                                                    width: 2,
+                                                  ),
+                                                  borderRadius:
+                                                      BorderRadius.circular(12),
+                                                ),
+                                                filled: true,
+                                                fillColor: (fullNameFocusNode
+                                                            ?.hasFocus ??
+                                                        false)
+                                                    ? const Color(0x4D9489F5)
+                                                    : Colors.white,
+                                                contentPadding:
+                                                    const EdgeInsetsDirectional
+                                                        .fromSTEB(16, 20, 16, 20),
+                                              ),
+                                              style: FlutterFlowTheme.of(context)
                                                   .headlineMedium
                                                   .override(
                                                     fontFamily: 'Outfit',
                                                     color:
-                                                        const Color(0xFF606A85),
+                                                        const Color(0xFF15161E),
                                                     fontSize: 24,
                                                     fontWeight: FontWeight.w500,
                                                   ),
-                                              hintStyle: FlutterFlowTheme.of(
-                                                      context)
-                                                  .labelMedium
-                                                  .override(
-                                                    fontFamily: 'Outfit',
-                                                    color:
-                                                        const Color(0xFF606A85),
-                                                    fontSize: 14,
-                                                    fontWeight: FontWeight.w500,
-                                                  ),
-                                              errorStyle: FlutterFlowTheme.of(
-                                                      context)
-                                                  .bodyMedium
-                                                  .override(
-                                                    fontFamily: 'Figtree',
-                                                    color:
-                                                        const Color(0xFFFF5963),
-                                                    fontSize: 12,
-                                                    fontWeight: FontWeight.w600,
-                                                  ),
-                                              enabledBorder: OutlineInputBorder(
-                                                borderSide: const BorderSide(
-                                                  color: Color(0xFFE5E7EB),
-                                                  width: 2,
-                                                ),
-                                                borderRadius:
-                                                    BorderRadius.circular(12),
-                                              ),
-                                              focusedBorder: OutlineInputBorder(
-                                                borderSide: const BorderSide(
-                                                  color: Color(0xFF6F61EF),
-                                                  width: 2,
-                                                ),
-                                                borderRadius:
-                                                    BorderRadius.circular(12),
-                                              ),
-                                              errorBorder: OutlineInputBorder(
-                                                borderSide: const BorderSide(
-                                                  color: Color(0xFFFF5963),
-                                                  width: 2,
-                                                ),
-                                                borderRadius:
-                                                    BorderRadius.circular(12),
-                                              ),
-                                              focusedErrorBorder:
-                                                  OutlineInputBorder(
-                                                borderSide: const BorderSide(
-                                                  color: Color(0xFFFF5963),
-                                                  width: 2,
-                                                ),
-                                                borderRadius:
-                                                    BorderRadius.circular(12),
-                                              ),
-                                              filled: true,
-                                              fillColor: (fullNameFocusNode
-                                                          ?.hasFocus ??
-                                                      false)
-                                                  ? const Color(0x4D9489F5)
-                                                  : Colors.white,
-                                              contentPadding:
-                                                  const EdgeInsetsDirectional
-                                                      .fromSTEB(16, 20, 16, 20),
+                                              cursorColor:
+                                                  const Color(0xFF6F61EF),
                                             ),
-                                            style: FlutterFlowTheme.of(context)
-                                                .headlineMedium
-                                                .override(
-                                                  fontFamily: 'Outfit',
-                                                  color:
-                                                      const Color(0xFF15161E),
-                                                  fontSize: 24,
-                                                  fontWeight: FontWeight.w500,
-                                                ),
-                                            cursorColor:
-                                                const Color(0xFF6F61EF),
                                           ),
                                         ],
                                       );
@@ -919,6 +925,13 @@ class _AddProductWidgetState extends State<AddProduct> {
                           if (response.statusCode == 200) {
                             print('Product added');
                             Navigator.pop(context);
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text(
+                                  'Product added',
+                                ),
+                              ),
+                            );
                           } else {
                             print('Failed to get products');
                             return null;
@@ -954,6 +967,13 @@ class _AddProductWidgetState extends State<AddProduct> {
                           if (response.statusCode == 200) {
                             print('Product added');
                             Navigator.pop(context);
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text(
+                                  'Product added',
+                                ),
+                              ),
+                            );
                           } else {
                             print('Failed to get products');
                             return null;

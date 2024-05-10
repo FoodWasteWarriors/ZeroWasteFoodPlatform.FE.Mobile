@@ -250,32 +250,35 @@ class _ShopState extends State<Shop> {
           child: Scaffold(
             key: const Key('shopScaffold'),
             backgroundColor: FlutterFlowTheme.of(context).secondaryBackground,
-            floatingActionButton: FloatingActionButton(
-              onPressed: () async {
-                await FlutterBarcodeScanner.scanBarcode(
-                        '#FF0000', 'Cancel', true, ScanMode.BARCODE)
-                    .then((value) => {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => AddProduct(
-                                key: const ValueKey<String>('AddProduct'),
-                                id: value,
-                                token: user.user.token,
-                                role: user.user.role,
+            floatingActionButton: () {
+              if (user.user.role == "Admin") return null;
+              return FloatingActionButton(
+                onPressed: () async {
+                  await FlutterBarcodeScanner.scanBarcode(
+                          '#FF0000', 'Cancel', true, ScanMode.BARCODE)
+                      .then((value) => {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => AddProduct(
+                                  key: const ValueKey<String>('AddProduct'),
+                                  id: value,
+                                  token: user.user.token,
+                                  role: user.user.role,
+                                ),
                               ),
-                            ),
-                          )
-                        });
-              },
-              backgroundColor: FlutterFlowTheme.of(context).primary,
-              elevation: 8,
-              child: Icon(
-                Icons.camera_alt,
-                color: FlutterFlowTheme.of(context).info,
-                size: 24,
-              ),
-            ),
+                            )
+                          });
+                },
+                backgroundColor: FlutterFlowTheme.of(context).primary,
+                elevation: 8,
+                child: Icon(
+                  Icons.camera_alt,
+                  color: FlutterFlowTheme.of(context).info,
+                  size: 24,
+                ),
+              );
+            }(),
             body: SafeArea(
               top: true,
               child: SingleChildScrollView(

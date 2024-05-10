@@ -45,21 +45,6 @@ class _ProfileState extends State<Profile> {
       appBar: AppBar(
         backgroundColor: FlutterFlowTheme.of(context).secondaryBackground,
         automaticallyImplyLeading: false,
-        leading: FlutterFlowIconButton(
-          borderColor: Colors.transparent,
-          borderRadius: 30,
-          borderWidth: 1,
-          buttonSize: 60,
-          icon: Icon(
-            Icons.arrow_back_rounded,
-            color: FlutterFlowTheme.of(context).primaryText,
-            size: 30,
-          ),
-          onPressed: () {
-            // ignore: avoid_print
-            Navigator.pushNamed(context, "/sign_in");
-          },
-        ),
         title: Text(
           'Profile',
           style: FlutterFlowTheme.of(context).bodyLarge,
