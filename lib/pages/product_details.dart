@@ -12,9 +12,10 @@ class ProductDetails extends StatefulWidget {
   final String propertyName;
   final String pricePerNight;
   final String location;
-  final int percentDiscount;
+  final double percentDiscount;
   final String token;
   final String expirationDate;
+  final Map<String, dynamic>? business;
 
   const ProductDetails({
     super.key,
@@ -26,6 +27,7 @@ class ProductDetails extends StatefulWidget {
     required this.percentDiscount,
     required this.token,
     required this.expirationDate,
+    required this.business,
   });
 
   @override

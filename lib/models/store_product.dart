@@ -2,7 +2,7 @@ import 'package:food_waste_2/models/category.dart';
 
 class StoreProductModel {
   final double originalPrice;
-  final int percentDiscount;
+  final double percentDiscount;
   final Map<String, dynamic>? business;
   final String id;
   final String name;

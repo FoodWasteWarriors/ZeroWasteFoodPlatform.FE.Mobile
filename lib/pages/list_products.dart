@@ -36,6 +36,7 @@ class _ListProductsState extends State<ListProducts> {
               percentDiscount: product.percentDiscount,
               expirationDate: product.expirationDate,
               categories: product.categories,
+              business: product.business,
             ),
         ].divide(const SizedBox(height: 12)),
       ),

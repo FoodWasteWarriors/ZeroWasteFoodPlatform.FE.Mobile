@@ -222,9 +222,11 @@ class _AddProductWidgetState extends State<AddProduct> {
                                       return Column(
                                         children: [
                                           Padding(
-                                            padding: const EdgeInsets.fromLTRB(0, 12.0, 0, 12.0),
+                                            padding: const EdgeInsets.fromLTRB(
+                                                0, 12.0, 0, 12.0),
                                             child: TextFormField(
-                                              controller: originalPriceController,
+                                              controller:
+                                                  originalPriceController,
                                               focusNode: originalPriceFocusNode,
                                               autofocus: true,
                                               textCapitalization:
@@ -232,37 +234,41 @@ class _AddProductWidgetState extends State<AddProduct> {
                                               obscureText: false,
                                               decoration: InputDecoration(
                                                 labelText: 'Original Price',
-                                                labelStyle: FlutterFlowTheme.of(
-                                                        context)
-                                                    .headlineMedium
-                                                    .override(
-                                                      fontFamily: 'Outfit',
-                                                      color:
-                                                          const Color(0xFF606A85),
-                                                      fontSize: 24,
-                                                      fontWeight: FontWeight.w500,
-                                                    ),
-                                                hintStyle: FlutterFlowTheme.of(
-                                                        context)
-                                                    .labelMedium
-                                                    .override(
-                                                      fontFamily: 'Outfit',
-                                                      color:
-                                                          const Color(0xFF606A85),
-                                                      fontSize: 14,
-                                                      fontWeight: FontWeight.w500,
-                                                    ),
-                                                errorStyle: FlutterFlowTheme.of(
-                                                        context)
-                                                    .bodyMedium
-                                                    .override(
-                                                      fontFamily: 'Figtree',
-                                                      color:
-                                                          const Color(0xFFFF5963),
-                                                      fontSize: 12,
-                                                      fontWeight: FontWeight.w600,
-                                                    ),
-                                                enabledBorder: OutlineInputBorder(
+                                                labelStyle:
+                                                    FlutterFlowTheme.of(context)
+                                                        .headlineMedium
+                                                        .override(
+                                                          fontFamily: 'Outfit',
+                                                          color: const Color(
+                                                              0xFF606A85),
+                                                          fontSize: 24,
+                                                          fontWeight:
+                                                              FontWeight.w500,
+                                                        ),
+                                                hintStyle:
+                                                    FlutterFlowTheme.of(context)
+                                                        .labelMedium
+                                                        .override(
+                                                          fontFamily: 'Outfit',
+                                                          color: const Color(
+                                                              0xFF606A85),
+                                                          fontSize: 14,
+                                                          fontWeight:
+                                                              FontWeight.w500,
+                                                        ),
+                                                errorStyle:
+                                                    FlutterFlowTheme.of(context)
+                                                        .bodyMedium
+                                                        .override(
+                                                          fontFamily: 'Figtree',
+                                                          color: const Color(
+                                                              0xFFFF5963),
+                                                          fontSize: 12,
+                                                          fontWeight:
+                                                              FontWeight.w600,
+                                                        ),
+                                                enabledBorder:
+                                                    OutlineInputBorder(
                                                   borderSide: const BorderSide(
                                                     color: Color(0xFFE5E7EB),
                                                     width: 2,
@@ -270,7 +276,8 @@ class _AddProductWidgetState extends State<AddProduct> {
                                                   borderRadius:
                                                       BorderRadius.circular(12),
                                                 ),
-                                                focusedBorder: OutlineInputBorder(
+                                                focusedBorder:
+                                                    OutlineInputBorder(
                                                   borderSide: const BorderSide(
                                                     color: Color(0xFF6F61EF),
                                                     width: 2,
@@ -303,9 +310,11 @@ class _AddProductWidgetState extends State<AddProduct> {
                                                     : Colors.white,
                                                 contentPadding:
                                                     const EdgeInsetsDirectional
-                                                        .fromSTEB(16, 20, 16, 20),
+                                                        .fromSTEB(
+                                                        16, 20, 16, 20),
                                               ),
-                                              style: FlutterFlowTheme.of(context)
+                                              style: FlutterFlowTheme.of(
+                                                      context)
                                                   .headlineMedium
                                                   .override(
                                                     fontFamily: 'Outfit',
@@ -319,48 +328,54 @@ class _AddProductWidgetState extends State<AddProduct> {
                                             ),
                                           ),
                                           Padding(
-                                            padding: const EdgeInsets.fromLTRB(0, 12.0, 0, 12.0),
+                                            padding: const EdgeInsets.fromLTRB(
+                                                0, 12.0, 0, 12.0),
                                             child: TextFormField(
                                               controller:
                                                   percentDiscountController,
-                                              focusNode: percentDiscountFocusNode,
+                                              focusNode:
+                                                  percentDiscountFocusNode,
                                               autofocus: true,
                                               textCapitalization:
                                                   TextCapitalization.words,
                                               obscureText: false,
                                               decoration: InputDecoration(
                                                 labelText: 'Percent Discount',
-                                                labelStyle: FlutterFlowTheme.of(
-                                                        context)
-                                                    .headlineMedium
-                                                    .override(
-                                                      fontFamily: 'Outfit',
-                                                      color:
-                                                          const Color(0xFF606A85),
-                                                      fontSize: 24,
-                                                      fontWeight: FontWeight.w500,
-                                                    ),
-                                                hintStyle: FlutterFlowTheme.of(
-                                                        context)
-                                                    .labelMedium
-                                                    .override(
-                                                      fontFamily: 'Outfit',
-                                                      color:
-                                                          const Color(0xFF606A85),
-                                                      fontSize: 14,
-                                                      fontWeight: FontWeight.w500,
-                                                    ),
-                                                errorStyle: FlutterFlowTheme.of(
-                                                        context)
-                                                    .bodyMedium
-                                                    .override(
-                                                      fontFamily: 'Figtree',
-                                                      color:
-                                                          const Color(0xFFFF5963),
-                                                      fontSize: 12,
-                                                      fontWeight: FontWeight.w600,
-                                                    ),
-                                                enabledBorder: OutlineInputBorder(
+                                                labelStyle:
+                                                    FlutterFlowTheme.of(context)
+                                                        .headlineMedium
+                                                        .override(
+                                                          fontFamily: 'Outfit',
+                                                          color: const Color(
+                                                              0xFF606A85),
+                                                          fontSize: 24,
+                                                          fontWeight:
+                                                              FontWeight.w500,
+                                                        ),
+                                                hintStyle:
+                                                    FlutterFlowTheme.of(context)
+                                                        .labelMedium
+                                                        .override(
+                                                          fontFamily: 'Outfit',
+                                                          color: const Color(
+                                                              0xFF606A85),
+                                                          fontSize: 14,
+                                                          fontWeight:
+                                                              FontWeight.w500,
+                                                        ),
+                                                errorStyle:
+                                                    FlutterFlowTheme.of(context)
+                                                        .bodyMedium
+                                                        .override(
+                                                          fontFamily: 'Figtree',
+                                                          color: const Color(
+                                                              0xFFFF5963),
+                                                          fontSize: 12,
+                                                          fontWeight:
+                                                              FontWeight.w600,
+                                                        ),
+                                                enabledBorder:
+                                                    OutlineInputBorder(
                                                   borderSide: const BorderSide(
                                                     color: Color(0xFFE5E7EB),
                                                     width: 2,
@@ -368,7 +383,8 @@ class _AddProductWidgetState extends State<AddProduct> {
                                                   borderRadius:
                                                       BorderRadius.circular(12),
                                                 ),
-                                                focusedBorder: OutlineInputBorder(
+                                                focusedBorder:
+                                                    OutlineInputBorder(
                                                   borderSide: const BorderSide(
                                                     color: Color(0xFF6F61EF),
                                                     width: 2,
@@ -401,9 +417,11 @@ class _AddProductWidgetState extends State<AddProduct> {
                                                     : Colors.white,
                                                 contentPadding:
                                                     const EdgeInsetsDirectional
-                                                        .fromSTEB(16, 20, 16, 20),
+                                                        .fromSTEB(
+                                                        16, 20, 16, 20),
                                               ),
-                                              style: FlutterFlowTheme.of(context)
+                                              style: FlutterFlowTheme.of(
+                                                      context)
                                                   .headlineMedium
                                                   .override(
                                                     fontFamily: 'Outfit',
@@ -961,6 +979,13 @@ class _AddProductWidgetState extends State<AddProduct> {
                                 'percentDiscount':
                                     int.parse(percentDiscountController.text),
                               }));
+                          print(fullNameController.text);
+                          print(descriptionController.text);
+                          print(phoneNumberController.text);
+                          print(dateController.text);
+                          print(choiceChipsValue);
+                          print(originalPriceController.text);
+                          print(percentDiscountController.text);
 
                           print(response.body);
                           print(response.statusCode);

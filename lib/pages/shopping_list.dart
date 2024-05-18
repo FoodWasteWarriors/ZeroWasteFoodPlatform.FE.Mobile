@@ -44,8 +44,6 @@ class _ShoppingListState extends State<ShoppingList> {
             print(data[0]['expirationDate']);
             print(data[0]['categories']);
 
-            
-
             for (var i = 0; i < data.length; i++) {
               var categoriesData = data[i]['categories'] as List<dynamic>;
               List<String> categoriesList = [];
@@ -101,6 +99,7 @@ class _ShoppingListState extends State<ShoppingList> {
                   percentDiscount: product.percentDiscount,
                   expirationDate: product.expirationDate,
                   categories: product.categories,
+                  business: product.business,
                 ),
             ].divide(const SizedBox(height: 12)),
           );

@@ -132,7 +132,6 @@ class _ShopState extends State<Shop> {
                 expirationDate: data[i]['expirationDate'],
                 categories: categoriesList));
           }
-
           setState(() {
             products = tempProducts.toList();
           });
@@ -256,19 +255,24 @@ class _ShopState extends State<Shop> {
                 onPressed: () async {
                   await FlutterBarcodeScanner.scanBarcode(
                           '#FF0000', 'Cancel', true, ScanMode.BARCODE)
-                      .then((value) => {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => AddProduct(
-                                  key: const ValueKey<String>('AddProduct'),
-                                  id: value,
-                                  token: user.user.token,
-                                  role: user.user.role,
-                                ),
-                              ),
-                            )
-                          });
+                      .then((value) {
+                    if (value.trim() == '-1') {
+                      print('No barcode scanned');
+                      return;
+                    } else {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => AddProduct(
+                            key: const ValueKey<String>('AddProduct'),
+                            id: value,
+                            token: user.user.token,
+                            role: user.user.role,
+                          ),
+                        ),
+                      );
+                    }
+                  });
                 },
                 backgroundColor: FlutterFlowTheme.of(context).primary,
                 elevation: 8,
@@ -565,7 +569,7 @@ class _ShopState extends State<Shop> {
                         mainAxisSize: MainAxisSize.max,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          /* Padding(
+                          Padding(
                             padding: const EdgeInsetsDirectional.fromSTEB(
                                 16, 0, 0, 0),
                             child: () {
@@ -601,11 +605,26 @@ class _ShopState extends State<Shop> {
                                       imageUrl:
                                           "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8YmVhY2h8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&w=900&q=60",
                                       beachName: "beachName",
+                                      pricePerNight: "pricePerNight"),
+                                  const RecentProductCard(
+                                      imageUrl:
+                                          "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8YmVhY2h8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&w=900&q=60",
+                                      beachName: "beachName",
+                                      pricePerNight: "pricePerNight"),
+                                  const RecentProductCard(
+                                      imageUrl:
+                                          "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8YmVhY2h8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&w=900&q=60",
+                                      beachName: "beachName",
+                                      pricePerNight: "pricePerNight"),
+                                  const RecentProductCard(
+                                      imageUrl:
+                                          "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8YmVhY2h8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&w=900&q=60",
+                                      beachName: "beachName",
                                       pricePerNight: "pricePerNight")
                                 ].divide(const SizedBox(width: 16)),
                               ),
                             ),
-                          ), */
+                          ),
                           Container(
                             width: double.infinity,
                             decoration: BoxDecoration(
@@ -665,6 +684,7 @@ class _ShopState extends State<Shop> {
                                             expirationDate:
                                                 product.expirationDate,
                                             categories: product.categories,
+                                            business: product.business,
                                           ),
                                       ].divide(const SizedBox(height: 12));
                                     } else if (user.user.role == "Business") {
@@ -683,6 +703,7 @@ class _ShopState extends State<Shop> {
                                             expirationDate:
                                                 product.expirationDate,
                                             categories: product.categories,
+                                            business: product.business,
                                           ),
                                       ].divide(const SizedBox(height: 12));
                                     } else {

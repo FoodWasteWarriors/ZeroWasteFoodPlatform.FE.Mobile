@@ -1,12 +1,15 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
 import 'package:food_waste_2/models/category.dart';
 import 'package:food_waste_2/pages/add_product.dart';
+import 'package:food_waste_2/pages/business_details.dart';
 import 'package:food_waste_2/pages/product_details.dart';
 import 'package:food_waste_2/providers/user_provider.dart';
 import 'package:provider/provider.dart';
+import 'package:http/http.dart' as http;
 
 class ProductCard extends StatelessWidget {
   final String id;
@@ -14,9 +17,10 @@ class ProductCard extends StatelessWidget {
   final String propertyName;
   final String pricePerNight;
   final String location;
-  final int percentDiscount;
+  final double percentDiscount;
   final String expirationDate;
   final List<String> categories;
+  final Map<String, dynamic>? business;
 
   const ProductCard({
     Key? key,
@@ -28,7 +32,22 @@ class ProductCard extends StatelessWidget {
     required this.percentDiscount,
     required this.expirationDate,
     required this.categories,
+    required this.business,
   }) : super(key: key);
+
+/*Future<StoreModel> getStoreDetails(String id) async {
+    final response =
+        await http.get(Uri.parse('http://10.0.2.2:5157/api/v1/Business/$id'));
+
+    if (response.statusCode == 200) {
+      // If the server returns a 200 OK response, parse the JSON.
+      final body = jsonDecode(response.body) as Map<String, dynamic>;
+      return StoreModel.fromJson(jsonDecode(body["data"].toString()));
+    } else {
+      // If the server returns an unsuccessful response code, throw an exception.
+      throw Exception('Failed to load store details');
+    }
+  }*/
 
   @override
   Widget build(BuildContext context) {
@@ -50,6 +69,7 @@ class ProductCard extends StatelessWidget {
                 percentDiscount: percentDiscount,
                 token: user.user.token,
                 expirationDate: expirationDate,
+                business: business,
               ),
             ),
           );
@@ -151,11 +171,8 @@ class ProductCard extends StatelessWidget {
                             const EdgeInsetsDirectional.fromSTEB(0, 8, 0, 0),
                         child: () {
                           if (categories.isNotEmpty) {
-                            
-                            return Text(
-                              categories.join(', '),
-                              style: Theme.of(context).textTheme.labelSmall
-                            );
+                            return Text(categories.join(', '),
+                                style: Theme.of(context).textTheme.labelSmall);
                           }
                         }()),
                   ],
@@ -178,7 +195,7 @@ class ProductCard extends StatelessWidget {
                             ),
                             TextSpan(
                               text:
-                                  ' \$${(double.parse(pricePerNight) * (1 - percentDiscount / 100)).toStringAsFixed(2)}',
+                                  ' \$${(double.parse(pricePerNight) * (1 - percentDiscount.toDouble() / 100)).toStringAsFixed(2)}',
                               style: Theme.of(context).textTheme.bodyText2,
                             ),
                           ],
@@ -186,19 +203,46 @@ class ProductCard extends StatelessWidget {
                         ),
                       ),
                     ),
-                    Padding(
-                      padding: const EdgeInsetsDirectional.fromSTEB(0, 4, 0, 8),
-                      child: () {
-                        DateTime parseDate =
-                            new DateFormat("yyyy-MM-dd").parse(expirationDate);
-                        var inputDate = DateTime.parse(parseDate.toString());
-                        var outputFormat = DateFormat('MM/dd/yyyy');
-                        var outputDate = outputFormat.format(inputDate);
-                        return Text(
-                          'Expires: $outputDate',
-                          style: Theme.of(context).textTheme.bodyText2,
-                        );
-                      }(),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        Padding(
+                          padding:
+                              const EdgeInsetsDirectional.fromSTEB(0, 4, 0, 8),
+                          child: () {
+                            DateTime parseDate = new DateFormat("yyyy-MM-dd")
+                                .parse(expirationDate);
+                            var inputDate =
+                                DateTime.parse(parseDate.toString());
+                            var outputFormat = DateFormat('MM/dd/yyyy');
+                            var outputDate = outputFormat.format(inputDate);
+                            return Text(
+                              'Expires: $outputDate',
+                              style: Theme.of(context).textTheme.bodyText2,
+                            );
+                          }(),
+                        ),
+                        GestureDetector(
+                          onTap: () {
+                            if (business != null &&
+                                business!.containsKey('name')) {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => BusinessDetailsPage(
+                                    name: business!['name'],
+                                    token: user.user.token,
+                                  ),
+                                ),
+                              );
+                            }
+                          },
+                          child: Text(
+                            'Listed by: ${business != null && business!.containsKey('name') ? business!['name'] : 'Not available'}',
+                            style: Theme.of(context).textTheme.bodyText2,
+                          ),
+                        ),
+                      ],
                     ),
                   ],
                 ),
