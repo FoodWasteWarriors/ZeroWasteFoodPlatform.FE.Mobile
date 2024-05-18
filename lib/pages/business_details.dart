@@ -1,12 +1,15 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
+import 'package:flutterflow_ui/flutterflow_ui.dart';
 import 'package:food_waste_2/models/store.dart';
 import 'package:food_waste_2/models/product_info.dart';
 import 'package:food_waste_2/models/store_product.dart';
 import 'package:food_waste_2/widgets/product_card.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+//import 'package:url_launcher/url_launcher.dart';
+import 'package:flutter/gestures.dart';
+import 'package:flutter/material.dart';
 
 class BusinessDetailsPage extends StatefulWidget {
   final String name;
@@ -15,6 +18,71 @@ class BusinessDetailsPage extends StatefulWidget {
 
   @override
   _BusinessDetailsPageState createState() => _BusinessDetailsPageState();
+}
+
+class BusinessDetails extends StatelessWidget {
+  final StoreModel store;
+
+  BusinessDetails({required this.store});
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      elevation: 5,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Center(
+              child: CircleAvatar(
+                radius: 40,
+                backgroundImage: NetworkImage(store.logo),
+              ),
+            ),
+            SizedBox(height: 16),
+            Divider(),
+            SizedBox(height: 16),
+            buildDetailRow(Icons.store, 'Name', store.name),
+            //buildDetailRow(Icons.person, 'Username', store.username),
+            buildDetailRow(Icons.email, 'Email', store.email),
+            buildDetailRow(Icons.phone, 'Phone Number', store.phoneNumber),
+            buildDetailRow(Icons.location_on, 'Address', store.address),
+            buildDetailRow(Icons.web, 'Website', store.website),
+            buildDetailRow(Icons.description, 'Description', store.description),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget buildDetailRow(IconData icon, String label, String value) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4.0),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Icon(icon, color: Colors.blue),
+          SizedBox(width: 8),
+          Expanded(
+            child: RichText(
+              text: TextSpan(
+                style: TextStyle(color: Colors.black, fontSize: 18),
+                children: [
+                  TextSpan(
+                    text: '$label: ',
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  TextSpan(text: value),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 }
 
 class _BusinessDetailsPageState extends State<BusinessDetailsPage> {
@@ -123,33 +191,32 @@ class _BusinessDetailsPageState extends State<BusinessDetailsPage> {
             return Text('Error: ${snapshot.error}');
           } else {
             StoreModel store = snapshot.data!;
-
             return Column(
               children: <Widget>[
-                ListTile(
-                  title: Text('Store Name'),
-                  subtitle: Text(store.username ?? 'Not available'),
-                ),
-                ListTile(
-                  title: Text('Email'),
-                  subtitle: Text(store.email ?? 'Not available'),
-                ),
-                ListTile(
-                  title: Text('Phone Number'),
-                  subtitle: Text(store.phoneNumber ?? 'Not available'),
-                ),
-                ListTile(
-                  title: Text('Website'),
-                  subtitle: Text(store.website ?? 'Not available'),
-                ),
-                ListTile(
-                  title: Text('Description'),
-                  subtitle: Text(store.description ?? 'Not available'),
-                ),
-                Divider(),
-                Text(
-                  'Products',
-                  style: Theme.of(context).textTheme.headline6,
+                BusinessDetails(store: store),
+                Expanded(
+                  child: ListView(
+                    padding: EdgeInsets.zero,
+                    primary: false,
+                    shrinkWrap: true,
+                    scrollDirection: Axis.vertical,
+                    children: [
+                      for (var product in storeProducts)
+                        ProductCard(
+                          id: product.id,
+                          imageUrl: product.photo,
+                          propertyName: product.name,
+                          pricePerNight: product.originalPrice.toString(),
+                          location: product.categories.join(
+                              ', '), // Assuming categories is a list of strings
+                          percentDiscount: product.percentDiscount,
+                          expirationDate: product.expirationDate,
+                          categories: product.categories,
+                          business: product
+                              .business, // Assuming business is a Map<String, dynamic>
+                        ),
+                    ].divide(const SizedBox(height: 12)),
+                  ),
                 ),
                 // Add your code to display products here
               ],

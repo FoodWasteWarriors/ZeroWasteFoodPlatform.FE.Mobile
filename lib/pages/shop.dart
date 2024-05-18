@@ -36,7 +36,7 @@ class _ShopState extends State<Shop> {
   List<StoreProductModel> products = [];
   bool isMounted = false;
   List<ReportModel> reports = [];
-
+  List<StoreProductModel> recommendedProducts = [];
   // text controller
   final TextEditingController textController = TextEditingController();
 
@@ -48,6 +48,51 @@ class _ShopState extends State<Shop> {
   @override
   void initState() {
     super.initState();
+    getRecommendedProducts().then((products) {
+      setState(() {
+        recommendedProducts = products;
+      });
+    });
+  }
+
+  Future<List<StoreProductModel>> getRecommendedProducts() async {
+    final response = await http.get(
+      Uri.parse('http://10.0.2.2:5157/api/v1/Recommendation/store-products'),
+    );
+    if (response.statusCode == 200) {
+      // If the server returns a 200 OK response, parse the JSON.
+      final body = jsonDecode(response.body) as List<dynamic>;
+
+      List<StoreProductModel> recommendedProducts = [];
+
+      for (var i = 0; i < body.length; i++) {
+        var product = body[i];
+        var categoriesData = product['categories'] as List<dynamic>;
+        List<String> categoriesList = [];
+        for (var j = 0; j < categoriesData.length; j++) {
+          categoriesList.add(categoriesData[j]['name']);
+        }
+
+        recommendedProducts.add(
+          StoreProductModel(
+            originalPrice: product['originalPrice'] as double? ?? 0.0,
+            percentDiscount: product['percentDiscount'] as double? ?? 0.0,
+            business: product['business'] as Map<String, dynamic>?,
+            id: product['id'] as String? ?? '',
+            name: product['name'] as String? ?? '',
+            description: product['description'] as String? ?? '',
+            photo: product['photo'] as String? ?? '',
+            expirationDate: product['expirationDate'] as String? ?? '',
+            categories: categoriesList,
+          ),
+        );
+      }
+
+      return recommendedProducts;
+    } else {
+      // If the server returns an unsuccessful response code, throw an exception.
+      throw Exception('Failed to load recommended products');
+    }
   }
 
   @override
@@ -576,7 +621,7 @@ class _ShopState extends State<Shop> {
                               final user = Provider.of<UserProvider>(context);
                               if (user.user.role == "Customer") {
                                 return Text(
-                                  'Categories',
+                                  'Recommended for you',
                                   style:
                                       FlutterFlowTheme.of(context).labelMedium,
                                 );
@@ -644,7 +689,7 @@ class _ShopState extends State<Shop> {
                                           Provider.of<UserProvider>(context);
                                       if (user.user.role == "Customer") {
                                         return Text(
-                                          'Recommended for you',
+                                          'Products',
                                           style: FlutterFlowTheme.of(context)
                                               .labelMedium,
                                         );
