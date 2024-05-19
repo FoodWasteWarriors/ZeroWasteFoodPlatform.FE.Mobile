@@ -16,6 +16,7 @@ class ProductDetails extends StatefulWidget {
   final String token;
   final String expirationDate;
   final Map<String, dynamic>? business;
+  final List<String> categories;
 
   const ProductDetails({
     super.key,
@@ -28,6 +29,7 @@ class ProductDetails extends StatefulWidget {
     required this.token,
     required this.expirationDate,
     required this.business,
+    required this.categories,
   });
 
   @override

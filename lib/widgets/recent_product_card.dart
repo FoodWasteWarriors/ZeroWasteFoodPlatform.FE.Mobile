@@ -1,17 +1,20 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:flutterflow_ui/flutterflow_ui.dart';
 
 class RecentProductCard extends StatelessWidget {
   final String imageUrl;
   final String beachName;
-  final String pricePerNight;
+  final double pricePerNight;
+  final double percentDiscount;
 
   const RecentProductCard({
     Key? key,
     required this.imageUrl,
     required this.beachName,
     required this.pricePerNight,
+    required this.percentDiscount,
   }) : super(key: key);
 
   @override
@@ -106,22 +109,33 @@ class RecentProductCard extends StatelessWidget {
               ),
               Padding(
                 padding: const EdgeInsetsDirectional.fromSTEB(0, 4, 0, 8),
-                child: RichText(
-                  text: TextSpan(
-                    children: [
-                      TextSpan(
-                        text: '\$$pricePerNight',
-                        style: TextStyle(
-                          color: Theme.of(context).primaryColor,
-                        ),
-                      ),
-                      TextSpan(
-                        text: ' /night',
-                        style: Theme.of(context).textTheme.caption,
-                      )
-                    ],
-                    style: Theme.of(context).textTheme.bodyText2,
-                  ),
+                child: Row(
+                  children: [
+                    Text(
+                      '\$${pricePerNight}',
+                      style: FlutterFlowTheme.of(context).bodyLarge.override(
+                            fontFamily: 'Outfit',
+                            color: const Color(0xFF0F1113),
+                            fontSize: 32,
+                            letterSpacing: 0,
+                            fontWeight: FontWeight.w500,
+                            decoration: TextDecoration.lineThrough,
+                          ),
+                    ),
+                    const SizedBox(
+                      width: 20,
+                    ),
+                    Text(
+                      '\$${(pricePerNight * (1 - percentDiscount / 100)).toStringAsFixed(2)}',
+                      style: FlutterFlowTheme.of(context).bodyLarge.override(
+                            fontFamily: 'Outfit',
+                            color: const Color(0xFF0F1113),
+                            fontSize: 32,
+                            letterSpacing: 0,
+                            fontWeight: FontWeight.w500,
+                          ),
+                    ),
+                  ],
                 ),
               ),
             ],

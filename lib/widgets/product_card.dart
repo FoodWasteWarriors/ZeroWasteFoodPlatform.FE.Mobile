@@ -70,6 +70,7 @@ class ProductCard extends StatelessWidget {
                 token: user.user.token,
                 expirationDate: expirationDate,
                 business: business,
+                categories: categories,
               ),
             ),
           );

@@ -931,6 +931,7 @@ class _AddProductWidgetState extends State<AddProduct> {
                                 'Authorization': 'Bearer ${widget.token}',
                               },
                               body: jsonEncode({
+                                'barcode': widget.id,
                                 'name': fullNameController.text,
                                 'description': descriptionController.text,
                                 'photo': phoneNumberController.text,
@@ -968,6 +969,7 @@ class _AddProductWidgetState extends State<AddProduct> {
                                 'Authorization': 'Bearer ${widget.token}',
                               },
                               body: jsonEncode({
+                                'barcode': widget.id,
                                 'name': fullNameController.text,
                                 'description': descriptionController.text,
                                 'photo': phoneNumberController.text,

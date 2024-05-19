@@ -7,6 +7,7 @@ import 'package:food_waste_2/models/store_product.dart';
 import 'package:food_waste_2/pages/add_product.dart';
 import 'package:food_waste_2/pages/list_monitored_products.dart';
 import 'package:food_waste_2/pages/list_products.dart';
+import 'package:food_waste_2/pages/product_details.dart';
 import 'package:food_waste_2/providers/user_provider.dart';
 import 'package:food_waste_2/services/product.dart';
 import 'package:food_waste_2/widgets/recent_product_card.dart';
@@ -72,16 +73,17 @@ class _ShopState extends State<Shop> {
     if (response.statusCode == 200) {
       print("Recommendation algorithm call successful");
       // If the server returns a 200 OK response, parse the JSON.
-      final body = jsonDecode(response.body) as List<dynamic>;
+      final body = jsonDecode(response.body) as Map<String, dynamic>;
+      final data = body['data'] as List<dynamic>;
 
       List<StoreProductModel> recommendedProducts = [];
 
-      for (var i = 0; i < body.length; i++) {
-        var product = body[i];
+      for (var i = 0; i < data.length; i++) {
+        var product = data[i];
 
-        print(product['name'] + "added recommendation");
+        print(product['name'] + " added recommendation");
 
-        var categoriesData = product['categories'] as Map<String, dynamic>;
+        var categoriesData = product['categories'] as List<dynamic>;
         List<String> categoriesList = [];
         for (var j = 0; j < categoriesData.length; j++) {
           categoriesList.add(categoriesData[j]['name']);
@@ -661,17 +663,45 @@ class _ShopState extends State<Shop> {
                                     const EdgeInsets.symmetric(horizontal: 16),
                                 scrollDirection: Axis.horizontal,
                                 children: [
-                                  const RecentProductCard(
-                                      imageUrl:
-                                          "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8YmVhY2h8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&w=900&q=60",
-                                      beachName: "beachName",
-                                      pricePerNight: "pricePerNight"),
                                   for (var product in recommendedProducts)
-                                    RecentProductCard(
-                                      imageUrl: product.photo,
-                                      beachName: product.name,
-                                      pricePerNight:
-                                          product.originalPrice.toString(),
+                                    GestureDetector(
+                                      onTap: () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                ProductDetails(
+                                              key: const ValueKey<String>(
+                                                  'Product'),
+                                              id: product.id,
+                                              imageUrl: product.photo,
+                                              propertyName: product.name,
+                                              pricePerNight: product
+                                                  .originalPrice
+                                                  .toString(),
+                                              location:
+                                                  product.categories.toString(),
+                                              percentDiscount:
+                                                  product.percentDiscount,
+                                              expirationDate:
+                                                  product.expirationDate,
+                                              categories: product.categories,
+                                              business: product.business,
+                                              token: user.user.token,
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: RecentProductCard(
+                                          imageUrl: product.photo,
+                                          beachName: product.name,
+                                          pricePerNight: product.originalPrice,
+                                          percentDiscount:
+                                              product.percentDiscount,
+                                        ),
+                                      ),
                                     ),
                                   const SizedBox(width: 16),
                                 ],
