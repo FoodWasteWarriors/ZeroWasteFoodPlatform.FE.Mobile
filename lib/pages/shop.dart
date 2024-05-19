@@ -24,6 +24,7 @@ import 'package:http/http.dart' as http;
 import 'package:badges/badges.dart' as badges;
 
 class Shop extends StatefulWidget {
+  //final String token;
   const Shop({super.key});
 
   @override
@@ -56,10 +57,20 @@ class _ShopState extends State<Shop> {
   }
 
   Future<List<StoreProductModel>> getRecommendedProducts() async {
+    final user = Provider.of<UserProvider>(context, listen: false);
+    print("Recommendation algorithm called");
     final response = await http.get(
       Uri.parse('http://10.0.2.2:5157/api/v1/Recommendation/store-products'),
+      headers: {
+        'Authorization': 'Bearer ${user.user.token}',
+      },
     );
+    print("Recommendation response: ");
+    print(response.body);
+    print("response length:");
+    print(response.body.length);
     if (response.statusCode == 200) {
+      print("Recommendation algorithm call successful");
       // If the server returns a 200 OK response, parse the JSON.
       final body = jsonDecode(response.body) as List<dynamic>;
 
@@ -67,7 +78,10 @@ class _ShopState extends State<Shop> {
 
       for (var i = 0; i < body.length; i++) {
         var product = body[i];
-        var categoriesData = product['categories'] as List<dynamic>;
+
+        print(product['name'] + "added recommendation");
+
+        var categoriesData = product['categories'] as Map<String, dynamic>;
         List<String> categoriesList = [];
         for (var j = 0; j < categoriesData.length; j++) {
           categoriesList.add(categoriesData[j]['name']);
@@ -86,6 +100,7 @@ class _ShopState extends State<Shop> {
             categories: categoriesList,
           ),
         );
+        print("Testing for recommendation: " + recommendedProducts[i].name);
       }
 
       return recommendedProducts;
@@ -150,12 +165,12 @@ class _ShopState extends State<Shop> {
               });
           final body = jsonDecode(response.body) as Map<String, dynamic>;
           final data = body['data'] as List<dynamic>;
-          print(data[0]['id']);
+          /* print(data[0]['id']);
           print(data[0]['name']);
           print(data[0]['description']);
           print(data[0]['photo']);
           print(data[0]['expirationDate']);
-          print(data[0]['categories']);
+          print(data[0]['categories']); */
 
           List<StoreProductModel> tempProducts = [];
 
@@ -503,12 +518,12 @@ class _ShopState extends State<Shop> {
                                 final body = jsonDecode(response.body)
                                     as Map<String, dynamic>;
                                 final data = body['data'] as List<dynamic>;
-                                print(data[0]['id']);
+                                /* print(data[0]['id']);
                                 print(data[0]['name']);
                                 print(data[0]['description']);
                                 print(data[0]['photo']);
                                 print(data[0]['expirationDate']);
-                                print(data[0]['categories']);
+                                print(data[0]['categories']); */
 
                                 List<StoreProductModel> tempProducts = [];
 
@@ -560,12 +575,12 @@ class _ShopState extends State<Shop> {
                                 final body = jsonDecode(response.body)
                                     as Map<String, dynamic>;
                                 final data = body['data'] as List<dynamic>;
-                                print(data[0]['id']);
+                                /* print(data[0]['id']);
                                 print(data[0]['name']);
                                 print(data[0]['description']);
                                 print(data[0]['photo']);
                                 print(data[0]['expirationDate']);
-                                print(data[0]['categories']);
+                                print(data[0]['categories']); */
 
                                 List<StoreProductModel> tempProducts = [];
 
@@ -651,22 +666,15 @@ class _ShopState extends State<Shop> {
                                           "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8YmVhY2h8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&w=900&q=60",
                                       beachName: "beachName",
                                       pricePerNight: "pricePerNight"),
-                                  const RecentProductCard(
-                                      imageUrl:
-                                          "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8YmVhY2h8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&w=900&q=60",
-                                      beachName: "beachName",
-                                      pricePerNight: "pricePerNight"),
-                                  const RecentProductCard(
-                                      imageUrl:
-                                          "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8YmVhY2h8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&w=900&q=60",
-                                      beachName: "beachName",
-                                      pricePerNight: "pricePerNight"),
-                                  const RecentProductCard(
-                                      imageUrl:
-                                          "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8YmVhY2h8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&w=900&q=60",
-                                      beachName: "beachName",
-                                      pricePerNight: "pricePerNight")
-                                ].divide(const SizedBox(width: 16)),
+                                  for (var product in recommendedProducts)
+                                    RecentProductCard(
+                                      imageUrl: product.photo,
+                                      beachName: product.name,
+                                      pricePerNight:
+                                          product.originalPrice.toString(),
+                                    ),
+                                  const SizedBox(width: 16),
+                                ],
                               ),
                             ),
                           ),

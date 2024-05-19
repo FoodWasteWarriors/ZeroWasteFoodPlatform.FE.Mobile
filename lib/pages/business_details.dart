@@ -1,15 +1,13 @@
 import 'dart:async';
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
 import 'package:food_waste_2/models/store.dart';
-import 'package:food_waste_2/models/product_info.dart';
+//import 'package:food_waste_2/models/product_info.dart';
 import 'package:food_waste_2/models/store_product.dart';
 import 'package:food_waste_2/widgets/product_card.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-//import 'package:url_launcher/url_launcher.dart';
-import 'package:flutter/gestures.dart';
-import 'package:flutter/material.dart';
 
 class BusinessDetailsPage extends StatefulWidget {
   final String name;
@@ -44,13 +42,12 @@ class BusinessDetails extends StatelessWidget {
             SizedBox(height: 16),
             Divider(),
             SizedBox(height: 16),
-            buildDetailRow(Icons.store, 'Name', store.name),
-            //buildDetailRow(Icons.person, 'Username', store.username),
-            buildDetailRow(Icons.email, 'Email', store.email),
-            buildDetailRow(Icons.phone, 'Phone Number', store.phoneNumber),
+            buildDetailRow(Icons.store, 'Brand', store.name),
+            buildDetailRow(Icons.email, 'E-mail', store.email),
+            buildDetailRow(Icons.phone, 'Phone', store.phoneNumber),
             buildDetailRow(Icons.location_on, 'Address', store.address),
             buildDetailRow(Icons.web, 'Website', store.website),
-            buildDetailRow(Icons.description, 'Description', store.description),
+            buildDetailRow(Icons.description, 'Summary', store.description),
           ],
         ),
       ),
@@ -88,6 +85,37 @@ class BusinessDetails extends StatelessWidget {
 class _BusinessDetailsPageState extends State<BusinessDetailsPage> {
   late Future<StoreModel> futureStore;
   List<StoreProductModel> storeProducts = [];
+  bool showCard = true;
+  ScrollController _scrollController = ScrollController();
+
+  @override
+  void initState() {
+    super.initState();
+    futureStore = getStoreDetails(widget.name);
+    _scrollController.addListener(() {
+      if (_scrollController.position.pixels >
+          _scrollController.position.minScrollExtent) {
+        if (showCard) {
+          setState(() {
+            showCard = false;
+          });
+        }
+      } else {
+        if (!showCard) {
+          setState(() {
+            showCard = true;
+          });
+        }
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
   Future<StoreModel> getStoreDetails(String name) async {
     final response = await http.get(
       Uri.parse(
@@ -99,13 +127,10 @@ class _BusinessDetailsPageState extends State<BusinessDetailsPage> {
       },
     );
     if (response.statusCode == 200) {
-      // If the server returns a 200 OK response, parse the JSON.
       final body = jsonDecode(response.body) as Map<String, dynamic>;
       final data = body["data"] as Map<String, dynamic>;
       var tempProducts = await getStoreProducts(data['id']);
-      print(tempProducts);
       storeProducts = tempProducts;
-      // Create the StoreModel object directly.
       return StoreModel(
         username: data['username'] as String? ?? '',
         email: data['email'] as String? ?? '',
@@ -119,7 +144,6 @@ class _BusinessDetailsPageState extends State<BusinessDetailsPage> {
         coverPhoto: data['coverPhoto'] as String? ?? '',
       );
     } else {
-      // If the server returns an unsuccessful response code, throw an exception.
       throw Exception('Failed to load store details');
     }
   }
@@ -134,7 +158,6 @@ class _BusinessDetailsPageState extends State<BusinessDetailsPage> {
       },
     );
     if (response.statusCode == 200) {
-      // If the server returns a 200 OK response, parse the JSON.
       final body = jsonDecode(response.body) as Map<String, dynamic>;
       final products = body["data"] as List<dynamic>;
 
@@ -165,15 +188,8 @@ class _BusinessDetailsPageState extends State<BusinessDetailsPage> {
 
       return storeProducts;
     } else {
-      // If the server returns an unsuccessful response code, throw an exception.
       throw Exception('Failed to load store products');
     }
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    futureStore = getStoreDetails(widget.name);
   }
 
   @override
@@ -186,16 +202,20 @@ class _BusinessDetailsPageState extends State<BusinessDetailsPage> {
         future: futureStore,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return CircularProgressIndicator();
+            return Center(child: CircularProgressIndicator());
           } else if (snapshot.hasError) {
-            return Text('Error: ${snapshot.error}');
+            return Center(child: Text('Error: ${snapshot.error}'));
           } else {
             StoreModel store = snapshot.data!;
             return Column(
               children: <Widget>[
-                BusinessDetails(store: store),
+                Visibility(
+                  visible: showCard,
+                  child: BusinessDetails(store: store),
+                ),
                 Expanded(
                   child: ListView(
+                    controller: _scrollController,
                     padding: EdgeInsets.zero,
                     primary: false,
                     shrinkWrap: true,
@@ -207,18 +227,15 @@ class _BusinessDetailsPageState extends State<BusinessDetailsPage> {
                           imageUrl: product.photo,
                           propertyName: product.name,
                           pricePerNight: product.originalPrice.toString(),
-                          location: product.categories.join(
-                              ', '), // Assuming categories is a list of strings
+                          location: product.categories.join(', '),
                           percentDiscount: product.percentDiscount,
                           expirationDate: product.expirationDate,
                           categories: product.categories,
-                          business: product
-                              .business, // Assuming business is a Map<String, dynamic>
+                          business: product.business,
                         ),
                     ].divide(const SizedBox(height: 12)),
                   ),
                 ),
-                // Add your code to display products here
               ],
             );
           }
