@@ -188,7 +188,7 @@ class ProductCard extends StatelessWidget {
                         text: TextSpan(
                           children: [
                             TextSpan(
-                              text: '\$$pricePerNight',
+                              text: '\ $pricePerNight₺',
                               style: TextStyle(
                                 color: Theme.of(context).primaryColor,
                                 decoration: TextDecoration.lineThrough,
@@ -196,7 +196,7 @@ class ProductCard extends StatelessWidget {
                             ),
                             TextSpan(
                               text:
-                                  ' \$${(double.parse(pricePerNight) * (1 - percentDiscount.toDouble() / 100)).toStringAsFixed(2)}',
+                                  '\ ${(double.parse(pricePerNight) * (1 - percentDiscount.toDouble() / 100)).toStringAsFixed(2)}₺',
                               style: Theme.of(context).textTheme.bodyText2,
                             ),
                           ],

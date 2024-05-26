@@ -66,10 +66,6 @@ class _ShopState extends State<Shop> {
         'Authorization': 'Bearer ${user.user.token}',
       },
     );
-    print("Recommendation response: ");
-    print(response.body);
-    print("response length:");
-    print(response.body.length);
     if (response.statusCode == 200) {
       print("Recommendation algorithm call successful");
       // If the server returns a 200 OK response, parse the JSON.
@@ -81,7 +77,7 @@ class _ShopState extends State<Shop> {
       for (var i = 0; i < data.length; i++) {
         var product = data[i];
 
-        print(product['name'] + " added recommendation");
+        print(product['name'] + " added to recommendations.");
 
         var categoriesData = product['categories'] as List<dynamic>;
         List<String> categoriesList = [];
@@ -102,7 +98,6 @@ class _ShopState extends State<Shop> {
             categories: categoriesList,
           ),
         );
-        print("Testing for recommendation: " + recommendedProducts[i].name);
       }
 
       return recommendedProducts;

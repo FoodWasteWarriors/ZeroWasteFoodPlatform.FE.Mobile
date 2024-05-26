@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutterflow_ui/flutterflow_ui.dart';
 import 'dart:ui';
 import 'package:flutter/material.dart';
@@ -5,6 +7,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class ProductDetails extends StatefulWidget {
   final String id;
@@ -191,7 +194,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          '\$${widget.pricePerNight}',
+                          '\ ${widget.pricePerNight}TL',
                           style:
                               FlutterFlowTheme.of(context).bodyLarge.override(
                                     fontFamily: 'Outfit',
@@ -206,7 +209,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                           width: 20,
                         ),
                         Text(
-                          '\$${(double.parse(widget.pricePerNight) * (1 - widget.percentDiscount / 100)).toStringAsFixed(2)}',
+                          '\ ${(double.parse(widget.pricePerNight) * (1 - widget.percentDiscount / 100)).toStringAsFixed(2)}TL',
                           style:
                               FlutterFlowTheme.of(context).bodyLarge.override(
                                     fontFamily: 'Outfit',
@@ -280,7 +283,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(
-                            'Expires on: ${outputDate}',
+                            'Expires on: $outputDate',
                             style:
                                 FlutterFlowTheme.of(context).bodyLarge.override(
                                       fontFamily: 'Outfit',
@@ -293,6 +296,27 @@ class _ProductDetailsState extends State<ProductDetails> {
                         ],
                       );
                     }(),
+                  ),
+                  Padding(
+                    padding:
+                        const EdgeInsetsDirectional.fromSTEB(24, 16, 24, 0),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.max,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          'Store: ${widget.business!['name']}',
+                          style:
+                              FlutterFlowTheme.of(context).bodyLarge.override(
+                                    fontFamily: 'Roboto',
+                                    color: const Color(0xFF0F1113),
+                                    fontSize: 16,
+                                    letterSpacing: 0,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                        ),
+                      ],
+                    ),
                   ),
                   /* Padding(
                     padding: const EdgeInsetsDirectional.fromSTEB(24, 8, 0, 0),

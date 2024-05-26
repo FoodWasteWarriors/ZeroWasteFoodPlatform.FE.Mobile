@@ -112,11 +112,11 @@ class RecentProductCard extends StatelessWidget {
                 child: Row(
                   children: [
                     Text(
-                      '\$${pricePerNight}',
+                      '\ ${pricePerNight}TL',
                       style: FlutterFlowTheme.of(context).bodyLarge.override(
                             fontFamily: 'Outfit',
                             color: const Color(0xFF0F1113),
-                            fontSize: 32,
+                            fontSize: 16,
                             letterSpacing: 0,
                             fontWeight: FontWeight.w500,
                             decoration: TextDecoration.lineThrough,
@@ -126,11 +126,11 @@ class RecentProductCard extends StatelessWidget {
                       width: 20,
                     ),
                     Text(
-                      '\$${(pricePerNight * (1 - percentDiscount / 100)).toStringAsFixed(2)}',
+                      '\ ${(pricePerNight * (1 - percentDiscount / 100)).toStringAsFixed(2)}TL',
                       style: FlutterFlowTheme.of(context).bodyLarge.override(
                             fontFamily: 'Outfit',
                             color: const Color(0xFF0F1113),
-                            fontSize: 32,
+                            fontSize: 16,
                             letterSpacing: 0,
                             fontWeight: FontWeight.w500,
                           ),
